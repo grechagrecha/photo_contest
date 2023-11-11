@@ -9,6 +9,9 @@ python-dotenv = "*"
 djangorestframework = "*"
 psycopg = "*"
 pillow = "*"
+django-allauth = "*"
+uuid = "*"
+django-stubs = "*"
 
 [dev-packages]
 

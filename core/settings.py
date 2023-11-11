@@ -3,7 +3,6 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv()
@@ -28,6 +27,10 @@ PROJECT_APPS = [
 
 ADDITIONAL_APPS = [
     'rest_framework',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.vk'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + ADDITIONAL_APPS
@@ -40,6 +43,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # AllAuth
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -55,6 +61,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                # AllAuth
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -73,6 +82,8 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'users.User'
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -88,14 +99,23 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'users.User'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+SITE_ID = 1
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Europe/Moscow'
 USE_TZ = True
 USE_I18N = True
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = 'static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = 'media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
