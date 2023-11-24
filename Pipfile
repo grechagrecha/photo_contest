@@ -12,6 +12,8 @@ pillow = "*"
 django-allauth = "*"
 uuid = "*"
 django-stubs = "*"
+django-imagekit = "*"
+django-filter = "*"
 
 [dev-packages]
 
