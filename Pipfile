@@ -14,6 +14,8 @@ uuid = "*"
 django-stubs = "*"
 django-imagekit = "*"
 django-filter = "*"
+django-crispy-forms = "*"
+crispy-bootstrap4 = "*"
 
 [dev-packages]
 
