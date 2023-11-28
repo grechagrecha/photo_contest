@@ -21,8 +21,9 @@ DJANGO_APPS = [
 ]
 
 PROJECT_APPS = [
-    'apps.api',
-    'apps.users',
+    'core.apps.CoreConfig',
+    'apps.api.apps.ApiConfig',
+    'apps.users.apps.UsersConfig',
 ]
 
 ADDITIONAL_APPS = [
@@ -30,7 +31,9 @@ ADDITIONAL_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.vk'
+    'allauth.socialaccount.providers.vk',
+    'crispy_forms',
+    'crispy_bootstrap4',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + ADDITIONAL_APPS
@@ -113,9 +116,12 @@ TIME_ZONE = 'Europe/Moscow'
 USE_TZ = True
 USE_I18N = True
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATIC_URL = 'static/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = 'media/'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap4'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
