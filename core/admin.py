@@ -5,7 +5,16 @@ from .models import Post
 
 
 class PostAdmin(ModelAdmin):
-    pass
+    list_display = [
+        'title',
+        'image',
+        'author',
+        'created_at',
+        'updated_at'
+    ]
+    list_filter = [
+        'author'
+    ]
 
 
 admin.site.register(Post, PostAdmin)

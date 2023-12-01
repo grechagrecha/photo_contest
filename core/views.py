@@ -23,7 +23,7 @@ class HomeView(ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         filtered_qs = PostFilterSet(self.request.GET, queryset=queryset).qs
-        return filtered_qs.order_by('-name')
+        return filtered_qs.order_by('-title')
 
 
 class AddPostView(CreateView):

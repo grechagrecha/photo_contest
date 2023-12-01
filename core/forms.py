@@ -3,7 +3,7 @@ from .models import Post
 
 
 class AddPostForm(forms.ModelForm):
-    name = forms.CharField(
+    title = forms.CharField(
         max_length=64,
         widget=forms.TextInput(
             attrs={
