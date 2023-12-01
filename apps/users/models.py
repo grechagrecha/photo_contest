@@ -5,4 +5,3 @@ from django.db import models
 
 class User(AbstractUser):
     avatar = models.ImageField(upload_to='avatars/')
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
