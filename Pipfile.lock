@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2686f62df03d0a655e0087d7eec96be40be8ade27f6ae00cc258db25005f7b4d"
+            "sha256": "412440f64cfecca4216381016fdfb8fccb6a7c7bd3694be8e9fdcbaf0f137047"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -265,15 +265,6 @@
             "markers": "python_version >= '3.8'",
             "version": "==2.1"
         },
-        "django-filter": {
-            "hashes": [
-                "sha256:526954f18bd7d6423f232a9a7974f58fbc6863908b9fc160de075e01adcc2a5f",
-                "sha256:bed070b38359dce7d2dbe057b165d59773057986356cb809ded983b36c77a976"
-            ],
-            "index": "pypi",
-            "markers": "python_version >= '3.7'",
-            "version": "==23.4"
-        },
         "django-fsm": {
             "hashes": [
                 "sha256:e2c02cbf273fb9691aa9a907c29990afdd21a4adea09c5640344c93fbe03f8d9",
@@ -292,20 +283,20 @@
         },
         "django-stubs": {
             "hashes": [
-                "sha256:2fcd257884a68dfa02de41ee5410ec805264d9b07d9b5b119e4dea82c7b8345e",
-                "sha256:e60b43de662a199db4b15c803c06669e0ac5035614af291cbd3b91591f7dcc94"
+                "sha256:4cf4de258fa71adc6f2799e983091b9d46cfc67c6eebc68fe111218c9a62b3b8",
+                "sha256:8ccd2ff4ee5adf22b9e3b7b1a516d2e1c2191e9d94e672c35cc2bc3dd61e0f6b"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==4.2.6"
+            "version": "==4.2.7"
         },
         "django-stubs-ext": {
             "hashes": [
-                "sha256:8c4d1fb5f68419b3b2474c659681a189803e27d6a5e5abf5aa0da57601b58633",
-                "sha256:921cd7ae4614e74c234bc0fe86ee75537d163addfe1fc6f134bf03e29d86c01e"
+                "sha256:45a5d102417a412e3606e3c358adb4744988a92b7b58ccf3fd64bddd5d04d14c",
+                "sha256:519342ac0849cda1559746c9a563f03ff99f636b0ebe7c14b75e816a00dfddc3"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==4.2.5"
+            "version": "==4.2.7"
         },
         "djangorestframework": {
             "hashes": [

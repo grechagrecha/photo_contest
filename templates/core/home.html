@@ -9,9 +9,9 @@
     <div class="row">
         <div class="col-lg-2">
             <h2 class="pb-5">Filters</h2>
-            <form method="GET">
-                {{ filter_form|crispy }}
-                <button class="mt-3 btn btn-primary" type="submit">Filter</button>
+            <form method="GET" action="{% url 'home' %}">
+                {{ filter_form | crispy }}
+                <input class="mt-3 btn btn-primary" type="submit" value="Search">
             </form>
         </div>
         <div class="col-lg-10">

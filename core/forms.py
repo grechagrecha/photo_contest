@@ -35,3 +35,7 @@ class AddPostForm(forms.ModelForm):
             'created_at',
             'modified_at'
         )
+
+
+class FilterForm(forms.Form):
+    search_query = forms.CharField(max_length=1000, label='Search for posts')
