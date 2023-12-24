@@ -5,11 +5,11 @@
 <div class="container mt-5">
     <div class="col-lg-12">
         <div class="row mb-5">
-            <h1 class="h1">{{ post.name }}</h1>
+            <h1 class="h1">{{ post.title }}</h1>
             <h2 class="h2">{{ post.author }}</h2>
         </div>
         <div class="row mb-5">
-            <img src="{{ post.image.url }}" alt="">
+            <img src="{{ post.image.url }}" alt="{{ post.title }}">
         </div>
         <div class="row">
             <p class="p">
@@ -20,7 +20,7 @@
     {% if request.user == post.author %}
     <div class="col-lg-4">
         <button class="btn btn-danger">
-            <a href="{% url 'post-delete' post.slug %}">Delete post</a>
+            <a href="{% url 'post-delete' post.slug %}" class="text-black text-decoration-none">Delete post</a>
         </button>
     </div>
     {% endif %}

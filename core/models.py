@@ -22,4 +22,4 @@ class Post(models.Model):
     # TODO: Comments, votes, thumbnail
 
     def __str__(self):
-        return self.title
+        return f'{self.title} by {self.author}'

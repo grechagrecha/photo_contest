@@ -1,10 +1,10 @@
 from django.views.generic import ListView, CreateView, DetailView, DeleteView
 from django.http import HttpResponseRedirect
 from django.shortcuts import reverse, redirect
+from django.db.models import Q
 
 from .models import Post
-from .filters import PostFilterSet
-from .forms import AddPostForm
+from .forms import AddPostForm, FilterForm
 
 
 class HomeView(ListView):
@@ -16,14 +16,20 @@ class HomeView(ListView):
 
     def get_context_data(self, *args):
         context = super().get_context_data()
-        context['filter_form'] = PostFilterSet(self.request.GET, queryset=Post.objects.all()).form
-
+        context['filter_form'] = FilterForm()
         return context
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        filtered_qs = PostFilterSet(self.request.GET, queryset=queryset).qs
-        return filtered_qs.order_by('-name')
+        search_query = self.request.GET.get('search_query', None)
+
+        if search_query:
+            queryset = queryset.filter(
+                Q(title__icontains=search_query) |
+                Q(description__icontains=search_query) |
+                Q(author__username__icontains=search_query)
+            )
+        return queryset.order_by('-title')
 
 
 class AddPostView(CreateView):
