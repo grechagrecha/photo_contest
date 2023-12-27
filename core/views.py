@@ -1,9 +1,9 @@
-from django.views.generic import ListView, CreateView, DetailView, DeleteView
+from django.views.generic import ListView, CreateView, DetailView, DeleteView, View
 from django.http import HttpResponseRedirect
-from django.shortcuts import reverse, redirect
+from django.shortcuts import reverse, redirect, render
 from django.db.models import Q
 
-from .models import Post
+from .models import Post, Like
 from .forms import AddPostForm, FilterForm
 
 
@@ -12,15 +12,19 @@ class HomeView(ListView):
     template_name = 'core/home.html'
     paginate_by = 6
 
-    filtered_qs = None
+    def post(self, *args, **kwargs):
+        pass
 
     def get_context_data(self, *args):
         context = super().get_context_data()
         context['filter_form'] = FilterForm()
+
+        likes_qs = Like.objects.filter(user=self.request.user)
+        context['user_likes'] = list(map(lambda like: like.post.slug, likes_qs))
         return context
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().filter(state='published')
         search_query = self.request.GET.get('search_query', None)
 
         if search_query:
@@ -80,3 +84,12 @@ class PostDeleteView(DeleteView):
             return HttpResponseRedirect(redirect_to=reverse('home'))
 
         return super().get(*args, **kwargs)
+
+
+class PostLikeView(View):
+    def post(self, *args, **kwargs):
+        slug = kwargs.get('slug')
+
+        Like.like_toggle(self.request.user, slug)
+
+        return HttpResponseRedirect(redirect_to=f'{reverse("home")}#{slug}')

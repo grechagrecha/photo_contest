@@ -5,7 +5,9 @@
 {% block content %}
 
 {% load crispy_forms_tags %}
-<div class="container py-5 mx-auto">
+{% load core_tags %}
+
+<div class="container py-5 mx-auto" xmlns="http://www.w3.org/1999/html">
     <div class="row">
         <div class="col-lg-2">
             <h2 class="pb-5">Filters</h2>
@@ -28,14 +30,26 @@
             </div>
             <div class="row">
                 {% for post in object_list %}
-                <div class="col-md-4">
+                <div class="col-md-4" id="{{ post.slug }}">
                     <div class="card mb-4 product-wap rounded-1">
                         <div class="card rounded-0">
                             <img class="card-img rounded-0 img-thumbnail" src="{{ post.image.url }}" alt="">
                         </div>
-                        <div class="card-body">
+                        <div class="card-body d-flex">
                             <!-- TODO: Add url to post -->
-                            <a href="{% url 'post-detail' post.slug %}" class="h3 text-decoration-none">{{ post.title }}</a>
+                            <a href="{% url 'post-detail' post.slug %}" class="h3 text-decoration-none me-auto">{{ post.title }}</a>
+                            <form action="{% url 'post-like' post.slug %}" method="POST">
+                                {% csrf_token %}
+                                {% if post.slug in user_likes %}
+                                <button type="submit" class="btn btn-danger justify-content-end">
+                                    <i class="fa fa-thumbs-down "></i>
+                                </button>
+                                {% else %}
+                                <button type="submit" class="btn btn-primary justify-content-end">
+                                    <i class="fa fa-thumbs-up "></i>
+                                </button>
+                                {% endif %}
+                            </form>
                         </div>
                     </div>
                 </div>
