@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{{ post.title }}
+{% endblock title %}
 
 {% block content %}
 
@@ -18,12 +23,23 @@
         </div>
     </div>
     {% if request.user == post.author %}
-    <div class="col-lg-4">
+    <div class="col-lg-4 mb-5">
         <button class="btn btn-danger">
             <a href="{% url 'post-delete' post.slug %}" class="text-black text-decoration-none">Delete post</a>
         </button>
     </div>
     {% endif %}
+    <div class="col-lg-12">
+        {% for comment in comments %}
+        {% if comment.user.avatar.url != None %}
+        <img src="{{ comment.user.avatar.url }}" alt="">
+        {% else %}
+        <img src="{% static 'users/404.jpg' %}" alt="">
+        {% endif %}
+        <h2>{{ comment.user }}</h2>
+        <p>{{ comment.text }}</p>
+        {% endfor %}
+    </div>
 </div>
 
 {% endblock %}

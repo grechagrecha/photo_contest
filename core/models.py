@@ -51,3 +51,15 @@ class Like(models.Model):
 
         if not created:
             like.delete()
+
+
+class Comment(models.Model):
+    objects = models.Manager()
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    text = models.CharField(max_length=300)
+
+    def __str__(self):
+        return f'Comment by {self.user} on {self.post.title}'
