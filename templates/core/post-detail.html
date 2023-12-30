@@ -22,13 +22,26 @@
             </p>
         </div>
     </div>
+
     {% if request.user == post.author %}
     <div class="col-lg-4 mb-5">
         <button class="btn btn-danger">
-            <a href="{% url 'post-delete' post.slug %}" class="text-black text-decoration-none">Delete post</a>
+            <a href="{% url 'post-delete' slug=post.slug %}" class="text-black text-decoration-none">Delete post</a>
         </button>
     </div>
     {% endif %}
+
+    <!-- TODO: Change to redirect to login page -->
+    {% if request.user.is_authenticated %}
+    <button class="btn btn-success mb-5">
+        <a href="{% url 'add-comment' slug=post.slug %}" class="text-decoration-none text-black">Add comment</a>
+    </button>
+    {% endif %}
+
+    {% if comments|length == 0 %}
+    <h2>There are no comments at the time!</h2>
+    {% endif %}
+
     <div class="col-lg-12">
         {% for comment in comments %}
         {% if comment.user.avatar.url != None %}
@@ -42,4 +55,4 @@
     </div>
 </div>
 
-{% endblock %}
+{% endblock content %}
