@@ -26,6 +26,7 @@ class HomeView(ListView):
     def get_queryset(self):
         queryset = super().get_queryset().filter(state='published')
         search_query = self.request.GET.get('search_query', None)
+        sorting_order = self.request.GET.get('ordering', None)
 
         if search_query:
             queryset = queryset.filter(
@@ -33,7 +34,12 @@ class HomeView(ListView):
                 Q(description__icontains=search_query) |
                 Q(author__username__icontains=search_query)
             )
-        return queryset.order_by('-title')
+
+        if sorting_order == 'asc':
+            return queryset.order_by('title')
+        if sorting_order == 'desc':
+            return queryset.order_by('-title')
+        return queryset.order_by('-created_at')
 
 
 class AddPostView(CreateView):

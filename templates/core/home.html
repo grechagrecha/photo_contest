@@ -20,11 +20,16 @@
             <div class="row">
                 <div class="col-md-6 pb-5">
                     <div class="d-flex">
-                        <select class="form-control">
-                            <option value="featured">Featured</option>
-                            <option value="atoz">A to Z</option>
-                            <option value="zota">Z to A</option>
-                        </select>
+                        <form method="GET" action="{% url 'home' %}">
+                            <select class="form-control" name="ordering">
+                                <!--
+                                <option value="featured">Featured</option>
+                                -->
+                                <option value="asc">A to Z</option>
+                                <option value="desc">Z to A</option>
+                            </select>
+                            <input type="submit" value="Submit" class="btn btn-primary">
+                        </form>
                     </div>
                 </div>
             </div>
