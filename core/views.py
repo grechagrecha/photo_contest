@@ -18,9 +18,9 @@ class HomeView(ListView):
     def get_context_data(self, *args):
         context = super().get_context_data()
         context['filter_form'] = FilterForm()
-
-        likes_qs = Like.objects.filter(user=self.request.user)
-        context['user_likes'] = list(map(lambda like: like.post.slug, likes_qs))
+        if self.request.user.is_authenticated:
+            likes_qs = Like.objects.filter(user=self.request.user)
+            context['user_likes'] = list(map(lambda like: like.post.slug, likes_qs))
         return context
 
     def get_queryset(self):
@@ -94,10 +94,11 @@ class PostDeleteView(DeleteView):
 
 class PostLikeView(View):
     def post(self, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(redirect_to=reverse('home'))
+
         slug = kwargs.get('slug')
-
         Like.like_toggle(self.request.user, slug)
-
         return HttpResponseRedirect(redirect_to=f'{reverse("home")}#{slug}')
 
 
@@ -121,5 +122,23 @@ class AddCommentView(CreateView):
 
     def get(self, request, *args, **kwargs):
         if not self.request.user.is_authenticated:
-            return HttpResponseRedirect(redirect_to=reverse('home'))
+            return HttpResponseRedirect(redirect_to=self.get_success_url())
         return super().get(request)
+
+
+class DeleteCommentView(DeleteView):
+    model = Comment
+    template_name_suffix = '-confirm-delete'
+    success_url = None
+
+    def get_success_url(self):
+        return reverse('home')
+
+    def get(self, *args, **kwargs):
+        comment_id = kwargs.get('pk')
+        comment = Comment.objects.get(pk=comment_id)
+
+        if self.request.user != comment.user:
+            return HttpResponseRedirect(redirect_to=self.get_success_url())
+
+        return super().get(*args, **kwargs)

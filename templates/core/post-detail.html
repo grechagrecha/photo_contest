@@ -44,13 +44,20 @@
 
     <div class="col-lg-12">
         {% for comment in comments %}
-        {% if comment.user.avatar.url != None %}
-        <img src="{{ comment.user.avatar.url }}" alt="">
-        {% else %}
-        <img src="{% static 'users/404.jpg' %}" alt="">
-        {% endif %}
-        <h2>{{ comment.user }}</h2>
-        <p>{{ comment.text }}</p>
+        <div class="d-flex">
+            {% if comment.user.avatar.url != None %}
+            <img src="{{ comment.user.avatar.url }}" alt="">
+            {% else %}
+            <img src="{% static 'users/404.jpg' %}" alt="">
+            {% endif %}
+            <h2>{{ comment.user }}</h2>
+            <p class="me-auto">{{ comment.text }}</p>
+            {% if comment.user == request.user %}
+            <button class="btn btn-danger">
+                <a class="text-decoration-none text-black" href="{% url 'delete-comment' pk=comment.pk %}">Delete comment</a>
+            </button>
+            {% endif %}
+        </div>
         {% endfor %}
     </div>
 </div>
