@@ -14,8 +14,11 @@ urlpatterns = [
     path('add-post/', views.AddPostView.as_view(), name='add-post'),
     path('posts/<slug:slug>', views.PostDetailView.as_view(), name='post-detail'),
     path('post-delete/<slug:slug>', views.PostDeleteView.as_view(), name='post-delete'),
-    path('like/<slug:slug>', views.PostLikeView.as_view(), name='post-like')
+    path('like/<slug:slug>', views.PostLikeView.as_view(), name='post-like'),
+    path('add-comment/<slug:slug>', views.AddCommentView.as_view(), name='add-comment'),
+    path('delete-comment/<int:pk>', views.DeleteCommentView.as_view(), name='delete-comment')
 
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

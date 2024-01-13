@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post
+from .models import Post, Comment
 
 
 class AddPostForm(forms.ModelForm):
@@ -33,8 +33,27 @@ class AddPostForm(forms.ModelForm):
             'author',
             'slug',
             'created_at',
-            'modified_at'
+            'modified_at',
+            'state'
         )
+
+
+class AddCommentForm(forms.ModelForm):
+    text = forms.CharField(
+        max_length=300,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+
+    class Meta:
+        model = Comment
+        exclude = [
+            'user',
+            'post'
+        ]
 
 
 class FilterForm(forms.Form):

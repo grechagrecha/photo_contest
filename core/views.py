@@ -1,10 +1,10 @@
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, View
 from django.http import HttpResponseRedirect
-from django.shortcuts import reverse, redirect, render
+from django.shortcuts import reverse, redirect
 from django.db.models import Q
 
-from .models import Post, Like
-from .forms import AddPostForm, FilterForm
+from .models import Post, Like, Comment
+from .forms import AddPostForm, FilterForm, AddCommentForm
 
 
 class HomeView(ListView):
@@ -18,14 +18,15 @@ class HomeView(ListView):
     def get_context_data(self, *args):
         context = super().get_context_data()
         context['filter_form'] = FilterForm()
-
-        likes_qs = Like.objects.filter(user=self.request.user)
-        context['user_likes'] = list(map(lambda like: like.post.slug, likes_qs))
+        if self.request.user.is_authenticated:
+            likes_qs = Like.objects.filter(user=self.request.user)
+            context['user_likes'] = list(map(lambda like: like.post.slug, likes_qs))
         return context
 
     def get_queryset(self):
         queryset = super().get_queryset().filter(state='published')
         search_query = self.request.GET.get('search_query', None)
+        sorting_order = self.request.GET.get('ordering', None)
 
         if search_query:
             queryset = queryset.filter(
@@ -33,7 +34,12 @@ class HomeView(ListView):
                 Q(description__icontains=search_query) |
                 Q(author__username__icontains=search_query)
             )
-        return queryset.order_by('-title')
+
+        if sorting_order == 'asc':
+            return queryset.order_by('title')
+        if sorting_order == 'desc':
+            return queryset.order_by('-title')
+        return queryset.order_by('-created_at')
 
 
 class AddPostView(CreateView):
@@ -67,6 +73,12 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'core/post-detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comments'] = Comment.objects.filter(post=self.object)
+
+        return context
+
 
 class PostDeleteView(DeleteView):
     model = Post
@@ -88,8 +100,51 @@ class PostDeleteView(DeleteView):
 
 class PostLikeView(View):
     def post(self, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(redirect_to=reverse('home'))
+
         slug = kwargs.get('slug')
-
         Like.like_toggle(self.request.user, slug)
-
         return HttpResponseRedirect(redirect_to=f'{reverse("home")}#{slug}')
+
+
+class AddCommentView(CreateView):
+    model = Comment
+    template_name = 'core/add-comment.html'
+    form_class = AddCommentForm
+    success_url = None
+
+    def get_success_url(self):
+        slug = self.kwargs.get('slug')
+        return reverse('post-detail', kwargs={'slug': slug})
+
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        comment.user = self.request.user
+        slug = self.kwargs.get('slug')
+        comment.post = Post.objects.get(slug=slug)
+        comment.save()
+        return redirect(self.get_success_url())
+
+    def get(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(redirect_to=self.get_success_url())
+        return super().get(request)
+
+
+class DeleteCommentView(DeleteView):
+    model = Comment
+    template_name_suffix = '-confirm-delete'
+    success_url = None
+
+    def get_success_url(self):
+        return reverse('home')
+
+    def get(self, *args, **kwargs):
+        comment_id = kwargs.get('pk')
+        comment = Comment.objects.get(pk=comment_id)
+
+        if self.request.user != comment.user:
+            return HttpResponseRedirect(redirect_to=self.get_success_url())
+
+        return super().get(*args, **kwargs)

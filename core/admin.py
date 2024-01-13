@@ -1,7 +1,7 @@
 from django.contrib import admin, messages
 from django.contrib.admin import ModelAdmin
 
-from .models import Post, Like
+from .models import Post, Like, Comment
 
 
 class PostAdmin(ModelAdmin):
@@ -43,5 +43,14 @@ class LikeAdmin(ModelAdmin):
     ]
 
 
+class CommentAdmin(ModelAdmin):
+    list_display = [
+        'user',
+        'post',
+        'text'
+    ]
+
+
 admin.site.register(Post, PostAdmin)
 admin.site.register(Like, LikeAdmin)
+admin.site.register(Comment, CommentAdmin)

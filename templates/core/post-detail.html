@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{{ post.title }}
+{% endblock title %}
 
 {% block content %}
 
@@ -17,13 +22,44 @@
             </p>
         </div>
     </div>
+
     {% if request.user == post.author %}
-    <div class="col-lg-4">
+    <div class="col-lg-4 mb-5">
         <button class="btn btn-danger">
-            <a href="{% url 'post-delete' post.slug %}" class="text-black text-decoration-none">Delete post</a>
+            <a href="{% url 'post-delete' slug=post.slug %}" class="text-black text-decoration-none">Delete post</a>
         </button>
     </div>
     {% endif %}
+
+    <!-- TODO: Change to redirect to login page -->
+    {% if request.user.is_authenticated %}
+    <button class="btn btn-success mb-5">
+        <a href="{% url 'add-comment' slug=post.slug %}" class="text-decoration-none text-black">Add comment</a>
+    </button>
+    {% endif %}
+
+    {% if comments|length == 0 %}
+    <h2>There are no comments at the time!</h2>
+    {% endif %}
+
+    <div class="col-lg-12">
+        {% for comment in comments %}
+        <div class="d-flex">
+            {% if comment.user.avatar.url != None %}
+            <img src="{{ comment.user.avatar.url }}" alt="">
+            {% else %}
+            <img src="{% static 'users/404.jpg' %}" alt="">
+            {% endif %}
+            <h2>{{ comment.user }}</h2>
+            <p class="me-auto">{{ comment.text }}</p>
+            {% if comment.user == request.user %}
+            <button class="btn btn-danger">
+                <a class="text-decoration-none text-black" href="{% url 'delete-comment' pk=comment.pk %}">Delete comment</a>
+            </button>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
 </div>
 
-{% endblock %}
+{% endblock content %}
