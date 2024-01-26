@@ -5,15 +5,20 @@ from django.db.models import Q
 
 from .models import Post, Like, Comment
 from .forms import AddPostForm, FilterForm, AddCommentForm
+from .paginator import SmartPaginator
 
 
 class HomeView(ListView):
     model = Post
     template_name = 'core/home.html'
     paginate_by = 6
+    paginator_class = SmartPaginator
 
-    def post(self, *args, **kwargs):
-        pass
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_paginator(self, *args, **kwargs):
+        return self.paginator_class(*args, request=self.request)
 
     def get_context_data(self, *args):
         context = super().get_context_data()
@@ -21,6 +26,7 @@ class HomeView(ListView):
         if self.request.user.is_authenticated:
             likes_qs = Like.objects.filter(user=self.request.user)
             context['user_likes'] = list(map(lambda like: like.post.slug, likes_qs))
+
         return context
 
     def get_queryset(self):
