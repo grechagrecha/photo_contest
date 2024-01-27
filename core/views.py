@@ -48,7 +48,7 @@ class HomeView(ListView):
         return queryset.order_by('-created_at')
 
 
-class AddPostView(CreateView):
+class PostAddView(CreateView):
     model = Post
     template_name = 'core/add-post.html'
     form_class = AddPostForm
@@ -114,7 +114,7 @@ class PostLikeView(View):
         return HttpResponseRedirect(redirect_to=f'{reverse("home")}#{slug}')
 
 
-class AddCommentView(CreateView):
+class CommentAddView(CreateView):
     model = Comment
     template_name = 'core/add-comment.html'
     form_class = AddCommentForm
@@ -138,7 +138,7 @@ class AddCommentView(CreateView):
         return super().get(request)
 
 
-class DeleteCommentView(DeleteView):
+class CommentDeleteView(DeleteView):
     model = Comment
     template_name_suffix = '-confirm-delete'
     success_url = None

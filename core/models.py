@@ -10,6 +10,8 @@ from apps.users.models import User
 class Post(models.Model):
     objects = models.Manager()
 
+    STATES = (('on_validation', 'On validation'), ('published', 'Published'))
+
     title = models.CharField(default='post', max_length=64)
     author = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
     image = models.ImageField(upload_to='images/posts/')
@@ -21,7 +23,7 @@ class Post(models.Model):
         blank=True,
         max_length=1000,
     )
-    state = FSMField(default='on_validation')
+    state = FSMField(default=STATES[0], choices=STATES)
 
     # TODO: Comments, votes, thumbnail
 

@@ -38,7 +38,14 @@
                 <div class="col-md-4" id="{{ post.slug }}">
                     <div class="card mb-4 product-wap rounded-1">
                         <div class="card rounded-0">
-                            <img class="card-img rounded-0 img-thumbnail" src="{{ post.image.url }}" alt="">
+                            <a href="{% url 'post-detail' post.slug %}">
+                                <img class="card-img rounded-0 img-thumbnail"
+                                     style="height: 40vh !important; width: 40vh !important; object-fit: cover !important;"
+                                     src="{{ post.image.url }}"
+                                     alt="{{ post.title }}"
+                                     title="{{ post.description }}"
+                                >
+                            </a>
                         </div>
                         <div class="card-body d-flex">
                             <!-- TODO: Add url to post -->

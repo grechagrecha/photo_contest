@@ -19,6 +19,42 @@ class CustomUserAdmin(UserAdmin):
         'is_active',
         'groups'
     ]
+    add_fieldsets = (
+        (
+            None,
+            {
+                'classes': ('wide',),
+                'fields': (
+                    'email',
+                    'username',
+                    'avatar'
+                ),
+            },
+        ),
+    )
+    fieldsets = (
+        (None, {'fields': ['password']}),
+        ('Personal info',
+         {
+             'fields': (
+                 'username',
+                 'email'
+             )
+         }
+         ),
+        (
+            'Permissions',
+            {
+                "fields": (
+                    'is_active',
+                    'is_staff',
+                    'is_superuser',
+                    'groups',
+                    'user_permissions',
+                ),
+            },
+        )
+    )
 
 
 admin.site.register(User, CustomUserAdmin)
