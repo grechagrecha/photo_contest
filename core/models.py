@@ -23,7 +23,7 @@ class Post(models.Model):
         blank=True,
         max_length=1000,
     )
-    state = FSMField(default=STATES[0], choices=STATES)
+    state = FSMField(default=STATES[0][0], choices=STATES)
 
     # TODO: Comments, votes, thumbnail
 

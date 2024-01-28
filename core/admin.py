@@ -22,7 +22,7 @@ class PostAdmin(ModelAdmin):
     @admin.action(description='Publish selected posts')
     def publish(self, request, queryset):
         for post in queryset:
-            if post.state == 'on_validation':
+            if post.state == Post.STATES[0][0]:
                 post.publish()
                 post.save()
         messages.success(request, 'Posts have been successfully published!')
@@ -30,7 +30,7 @@ class PostAdmin(ModelAdmin):
     @admin.action(description='Retract selected posts')
     def retract(self, request, queryset):
         for post in queryset:
-            if post.state == 'published':
+            if post.state == Post.STATES[1][0]:
                 post.retract()
                 post.save()
         messages.success(request, 'Posts have been successfully retracted!')

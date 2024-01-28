@@ -47,21 +47,35 @@
                                 >
                             </a>
                         </div>
-                        <div class="card-body d-flex">
-                            <!-- TODO: Add url to post -->
-                            <a href="{% url 'post-detail' post.slug %}" class="h3 text-decoration-none me-auto">{{ post.title }}</a>
-                            <form action="{% url 'post-like' post.slug %}" method="POST">
-                                {% csrf_token %}
-                                {% if post.slug in user_likes %}
-                                <button type="submit" class="btn btn-danger justify-content-end">
-                                    <i class="fa fa-thumbs-down "></i>
-                                </button>
-                                {% else %}
-                                <button type="submit" class="btn btn-primary justify-content-end">
-                                    <i class="fa fa-thumbs-up "></i>
-                                </button>
-                                {% endif %}
-                            </form>
+                        <div class="">
+                            <div class="card-body d-flex" id="card-body0">
+                                <a href="{% url 'post-detail' post.slug %}" class="h3 text-decoration-none me-auto">{{ post.title }}</a>
+                                <div class="comment-button">
+                                    <form action="{% url 'post-detail' post.slug %}#comment-section">
+                                        <button type="submit" class="btn btn-primary justify-content-center me-1">
+                                            <span>{{ post.comment_set.count }}</span>
+                                            <i class="fa fa-comment"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <form action="{% url 'post-like' post.slug %}" method="POST">
+                                    {% csrf_token %}
+                                    {% if post.slug in user_likes %}
+                                    <button type="submit" class="btn btn-danger justify-content-center">
+                                        <span>{{ post.like_set.count }}</span>
+                                        <i title="Unlike" class="fa fa-thumbs-down "></i>
+                                    </button>
+                                    {% else %}
+                                    <button type="submit" class="btn btn-primary justify-content-end">
+                                        <span>{{ post.like_set.count }}</span>
+                                        <i title="Like" class="fa fa-thumbs-up "></i>
+                                    </button>
+                                    {% endif %}
+                                </form>
+                            </div>
+                            <div class="ms-3 d-flex" id="card-body1">
+                                <h3 class="card-body-author"><i class="fa fa-user me-2"></i>{{ post.author }}</h3>
+                            </div>
                         </div>
                     </div>
                 </div>
