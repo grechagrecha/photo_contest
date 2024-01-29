@@ -5,37 +5,78 @@
 {% block content %}
 
 {% load crispy_forms_tags %}
+{% load core_tags %}
+
 <div class="container py-5 mx-auto">
     <div class="row">
-        <div class="col-lg-2">
+        <div class="col-2">
             <h2 class="pb-5">Filters</h2>
-            <form method="GET">
-                {{ filter_form|crispy }}
-                <button class="mt-3 btn btn-primary" type="submit">Filter</button>
+            <form method="GET" action="{% url 'home' %}">
+                {{ filter_form | crispy }}
+                <input class="mt-3 btn btn-primary" type="submit" value="Search">
             </form>
         </div>
-        <div class="col-lg-10">
+        <div class="col-10">
             <div class="row">
                 <div class="col-md-6 pb-5">
                     <div class="d-flex">
-                        <select class="form-control">
-                            <option value="featured">Featured</option>
-                            <option value="atoz">A to Z</option>
-                            <option value="zota">Z to A</option>
-                        </select>
+                        <form method="GET" action="{% url 'home' %}">
+                            <select class="form-control" name="ordering">
+                                <!--
+                                <option value="featured">Featured</option>
+                                -->
+                                <option value="asc">A to Z</option>
+                                <option value="desc">Z to A</option>
+                            </select>
+                            <input type="submit" value="Submit" class="btn btn-primary">
+                        </form>
                     </div>
                 </div>
             </div>
             <div class="row">
                 {% for post in object_list %}
-                <div class="col-md-4">
+                <div class="col-md-4" id="{{ post.slug }}">
                     <div class="card mb-4 product-wap rounded-1">
                         <div class="card rounded-0">
-                            <img class="card-img rounded-0 img-thumbnail" src="{{ post.image.url }}" alt="">
+                            <a href="{% url 'post-detail' post.slug %}">
+                                <img class="card-img rounded-0 img-thumbnail"
+                                     style="height: 40vh !important; width: 40vh !important; object-fit: cover !important;"
+                                     src="{{ post.image.url }}"
+                                     alt="{{ post.title }}"
+                                     title="{{ post.description }}"
+                                >
+                            </a>
                         </div>
-                        <div class="card-body">
-                            <!-- TODO: Add url to post -->
-                            <a href="{% url 'post-detail' post.slug %}" class="h3 text-decoration-none">{{ post.name }}</a>
+                        <div class="">
+                            <div class="card-body d-flex" id="card-body0">
+                                <a href="{% url 'post-detail' post.slug %}"
+                                   class="h3  d-inline-block text-truncate text-decoration-none me-auto text-nowrap">{{ post.title }}</a>
+                                <div class="comment-button">
+                                    <form action="{% url 'post-detail' post.slug %}#comment-section">
+                                        <button type="submit" class="btn btn-sm btn-primary justify-content-center me-1">
+                                            <span>{{ post.comment_set.count }}</span>
+                                            <i class="fa fa-comment"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <form action="{% url 'post-like' post.slug %}" method="POST">
+                                    {% csrf_token %}
+                                    {% if post.slug in user_likes %}
+                                    <button type="submit" class="btn btn-sm btn-danger justify-content-center">
+                                        <span>{{ post.like_set.count }}</span>
+                                        <i title="Unlike" class="fa fa-thumbs-down "></i>
+                                    </button>
+                                    {% else %}
+                                    <button type="submit" class="btn btn-sm btn-primary justify-content-end">
+                                        <span>{{ post.like_set.count }}</span>
+                                        <i title="Like" class="fa fa-thumbs-up "></i>
+                                    </button>
+                                    {% endif %}
+                                </form>
+                            </div>
+                            <div class="ms-3 d-flex" id="card-body1">
+                                <h5 class="card-body-author"><i class="fa fa-user me-2"></i>{{ post.author }}</h5>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -43,26 +84,32 @@
             </div>
             {% if is_paginated %}
             <div class="row">
-                <ul class="pagination pagination-lf justify-content-end">
-                    {% for page in page_obj.paginator %}
-                    {% if page.number == page_obj.number %}
-                    <li class="page-item disabled">
-                        <a
-                                class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
-                                href="?page={{ page.number }}"
-                                tabindex="-1">{{ page.number }}
-                        </a>
-                    </li>
-                    {% else %}
+                <ul class="pagination justify-content-end">
+                    {% if page_obj.has_previous %}
                     <li class="page-item">
-                        <a
-                                class="page-link intive rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
-                                href="?page={{ page.number }}"
-                                tabindex="-1">{{ page.number }}
-                        </a>
+                        <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
+                           href="?{{ paginator.first_page_params }}">&laquo; First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
+                           href="?{{ page_obj.previous_page_params }}">Previous</a>
                     </li>
                     {% endif %}
-                    {% endfor %}
+                    <li class="page-item">
+                        <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a>
+                    </li>
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
+                           href="?{{ page_obj.next_page_params }}"
+                           rel="next">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
+                           href="?{{ paginator.last_page_params }}">Last &raquo;</a>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
             {% endif %}
