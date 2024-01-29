@@ -7,16 +7,16 @@
 {% load crispy_forms_tags %}
 {% load core_tags %}
 
-<div class="container py-5 mx-auto" xmlns="http://www.w3.org/1999/html">
+<div class="container py-5 mx-auto">
     <div class="row">
-        <div class="col-lg-2">
+        <div class="col-2">
             <h2 class="pb-5">Filters</h2>
             <form method="GET" action="{% url 'home' %}">
                 {{ filter_form | crispy }}
                 <input class="mt-3 btn btn-primary" type="submit" value="Search">
             </form>
         </div>
-        <div class="col-lg-10">
+        <div class="col-10">
             <div class="row">
                 <div class="col-md-6 pb-5">
                     <div class="d-flex">
@@ -49,10 +49,11 @@
                         </div>
                         <div class="">
                             <div class="card-body d-flex" id="card-body0">
-                                <a href="{% url 'post-detail' post.slug %}" class="h3 text-decoration-none me-auto">{{ post.title }}</a>
+                                <a href="{% url 'post-detail' post.slug %}"
+                                   class="h3  d-inline-block text-truncate text-decoration-none me-auto text-nowrap">{{ post.title }}</a>
                                 <div class="comment-button">
                                     <form action="{% url 'post-detail' post.slug %}#comment-section">
-                                        <button type="submit" class="btn btn-primary justify-content-center me-1">
+                                        <button type="submit" class="btn btn-sm btn-primary justify-content-center me-1">
                                             <span>{{ post.comment_set.count }}</span>
                                             <i class="fa fa-comment"></i>
                                         </button>
@@ -61,12 +62,12 @@
                                 <form action="{% url 'post-like' post.slug %}" method="POST">
                                     {% csrf_token %}
                                     {% if post.slug in user_likes %}
-                                    <button type="submit" class="btn btn-danger justify-content-center">
+                                    <button type="submit" class="btn btn-sm btn-danger justify-content-center">
                                         <span>{{ post.like_set.count }}</span>
                                         <i title="Unlike" class="fa fa-thumbs-down "></i>
                                     </button>
                                     {% else %}
-                                    <button type="submit" class="btn btn-primary justify-content-end">
+                                    <button type="submit" class="btn btn-sm btn-primary justify-content-end">
                                         <span>{{ post.like_set.count }}</span>
                                         <i title="Like" class="fa fa-thumbs-up "></i>
                                     </button>
@@ -74,7 +75,7 @@
                                 </form>
                             </div>
                             <div class="ms-3 d-flex" id="card-body1">
-                                <h3 class="card-body-author"><i class="fa fa-user me-2"></i>{{ post.author }}</h3>
+                                <h5 class="card-body-author"><i class="fa fa-user me-2"></i>{{ post.author }}</h5>
                             </div>
                         </div>
                     </div>
