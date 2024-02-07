@@ -1,8 +1,11 @@
+import pprint
+
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, View
 from django.http import HttpResponseRedirect
 from django.shortcuts import reverse, redirect
 from django.db.models import Q
 
+from apps.users.mixins import TokenRequiredMixin
 from .models import Post, Like, Comment
 from .forms import AddPostForm, FilterForm, AddCommentForm
 from .paginator import SmartPaginator
@@ -15,6 +18,7 @@ class HomeView(ListView):
     paginator_class = SmartPaginator
 
     def get(self, request, *args, **kwargs):
+        print(request.META.get('HTTP_AUTHORIZATION'))
         return super().get(request, *args, **kwargs)
 
     def get_paginator(self, *args, **kwargs):
@@ -48,7 +52,7 @@ class HomeView(ListView):
         return queryset.order_by('-created_at')
 
 
-class PostAddView(CreateView):
+class PostAddView(TokenRequiredMixin, CreateView):
     model = Post
     template_name = 'core/add-post.html'
     form_class = AddPostForm

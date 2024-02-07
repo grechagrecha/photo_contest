@@ -9,6 +9,14 @@
 
 
 {% block content %}
+<div class="row justify-content-center mt-1 ms-5">
+    <ul class="text-color-red">
+        {% for message in messages %}
+        <li><h4>{{ message }}</h4></li>
+        {% endfor %}
+    </ul>
+</div>
+
 <div class="d-flex">
     <div class="mx-auto mt-5">
         {% element h1 %}Sign in{% endelement %}
@@ -16,7 +24,7 @@
             {% blocktrans %}If you have not created an account yet, then please
             <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}
         </p>
-        {% url 'account_login' as login_url %}
+        {% url 'users:login' as login_url %}
         {% element form form=form method="post" action=login_url tags="entrance,login" class="form-inline" %}
         {% slot body %}
         {% csrf_token %}
