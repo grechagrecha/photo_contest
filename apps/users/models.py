@@ -29,7 +29,8 @@ class UserManager(BaseUserManager):
 
 
 class CustomerManager(UserManager):
-    pass
+    def get_queryset(self):
+        return super().get_queryset().filter(role=self.model.Roles.CUSTOMER)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -54,7 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['email']
 
     def __str__(self):
-        return self.username
+        return f'{self.role}: {self.username}'
 
 
 class Customer(User):

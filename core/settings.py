@@ -51,7 +51,10 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 
     # Token
-    'apps.users.middleware.TokenMiddleware'
+    'apps.users.middleware.TokenMiddleware',
+    
+    # Restrict access to admin for non-staff users
+    'apps.users.middleware.RestrictAccessToAdminMiddleware'
 ]
 
 ROOT_URLCONF = 'core.urls'
