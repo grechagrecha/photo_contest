@@ -23,3 +23,5 @@ J
 core/settings.py,5/0/50d2db7959c3140e27b70128db0c86bd7ad43594
 H
 apps/users/middleware.py,0/1/015c0784eb1cec30d7ecfae8bc7b204473211dd3
+C
+apps/users/admin.py,4/1/41603a18dae2bc34fe7075f79fb8903553ef6b1a

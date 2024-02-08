@@ -27,7 +27,9 @@ class CustomUserAdmin(UserAdmin):
                 'fields': (
                     'email',
                     'username',
-                    'avatar'
+                    'password',
+                    'avatar',
+                    'role'
                 ),
             },
         ),
