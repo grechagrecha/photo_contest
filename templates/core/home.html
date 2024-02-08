@@ -22,9 +22,6 @@
                     <div class="d-flex">
                         <form method="GET" action="{% url 'home' %}">
                             <select class="form-control" name="ordering">
-                                <!--
-                                <option value="featured">Featured</option>
-                                -->
                                 <option value="asc">A to Z</option>
                                 <option value="desc">Z to A</option>
                             </select>
@@ -64,7 +61,7 @@
                                     {% if post.slug in user_likes %}
                                     <button type="submit" class="btn btn-sm btn-danger justify-content-center">
                                         <span>{{ post.like_set.count }}</span>
-                                        <i title="Unlike" class="fa fa-thumbs-down "></i>
+                                        <i title="Unlike" class="fa fa-thumbs-up "></i>
                                     </button>
                                     {% else %}
                                     <button type="submit" class="btn btn-sm btn-primary justify-content-end">
