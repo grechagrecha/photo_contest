@@ -15,4 +15,5 @@ class TokenMiddleware:
         return response
 
     def process_request(self, request):
-        request.META['HTTP_AUTHORIZATION'] = request.user.token
+        if request.user.is_authenticated:
+            request.META['HTTP_AUTHORIZATION'] = f'token {request.user.token}'

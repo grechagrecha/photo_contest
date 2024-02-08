@@ -18,7 +18,6 @@ class HomeView(ListView):
     paginator_class = SmartPaginator
 
     def get(self, request, *args, **kwargs):
-        print(request.META.get('HTTP_AUTHORIZATION'))
         return super().get(request, *args, **kwargs)
 
     def get_paginator(self, *args, **kwargs):
@@ -52,11 +51,25 @@ class HomeView(ListView):
         return queryset.order_by('-created_at')
 
 
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'core/post-detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comments'] = Comment.objects.filter(post=self.object)
+
+        return context
+
+
 class PostAddView(TokenRequiredMixin, CreateView):
     model = Post
     template_name = 'core/add-post.html'
     form_class = AddPostForm
     success_url = None
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse('home')
@@ -73,24 +86,8 @@ class PostAddView(TokenRequiredMixin, CreateView):
         post.save()
         return redirect(self.get_success_url())
 
-    def get(self, request, *args):
-        if not self.request.user.is_authenticated:
-            return HttpResponseRedirect(redirect_to=reverse('home'))
-        return super().get(request)
 
-
-class PostDetailView(DetailView):
-    model = Post
-    template_name = 'core/post-detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['comments'] = Comment.objects.filter(post=self.object)
-
-        return context
-
-
-class PostDeleteView(DeleteView):
+class PostDeleteView(TokenRequiredMixin, DeleteView):
     model = Post
     template_name_suffix = '-confirm-delete'
     success_url = None
@@ -108,17 +105,14 @@ class PostDeleteView(DeleteView):
         return super().get(*args, **kwargs)
 
 
-class PostLikeView(View):
+class PostLikeView(TokenRequiredMixin, View):
     def post(self, *args, **kwargs):
-        if not self.request.user.is_authenticated:
-            return HttpResponseRedirect(redirect_to=reverse('home'))
-
         slug = kwargs.get('slug')
         Like.like_toggle(self.request.user, slug)
         return HttpResponseRedirect(redirect_to=f'{reverse("home")}#{slug}')
 
 
-class CommentAddView(CreateView):
+class CommentAddView(TokenRequiredMixin, CreateView):
     model = Comment
     template_name = 'core/add-comment.html'
     form_class = AddCommentForm
@@ -137,12 +131,10 @@ class CommentAddView(CreateView):
         return redirect(self.get_success_url())
 
     def get(self, request, *args, **kwargs):
-        if not self.request.user.is_authenticated:
-            return HttpResponseRedirect(redirect_to=self.get_success_url())
-        return super().get(request)
+        return super().get(request, *args, **kwargs)
 
 
-class CommentDeleteView(DeleteView):
+class CommentDeleteView(TokenRequiredMixin, DeleteView):
     model = Comment
     template_name_suffix = '-confirm-delete'
     success_url = None
