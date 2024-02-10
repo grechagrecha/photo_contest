@@ -90,9 +90,6 @@ class PostDeleteView(TokenRequiredMixin, DeleteView):
     template_name_suffix = '-confirm-delete'
     success_url = None
 
-    def get_success_url(self):
-        return reverse('home')
-
     def get(self, *args, **kwargs):
         slug = kwargs.get('slug')
         post = Post.objects.get(slug=slug)
@@ -101,6 +98,9 @@ class PostDeleteView(TokenRequiredMixin, DeleteView):
             return HttpResponseRedirect(redirect_to=reverse('home'))
 
         return super().get(*args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('home')
 
 
 class PostLikeView(TokenRequiredMixin, View):
@@ -116,6 +116,9 @@ class CommentAddView(TokenRequiredMixin, CreateView):
     form_class = AddCommentForm
     success_url = None
 
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
     def get_success_url(self):
         slug = self.kwargs.get('slug')
         return reverse('post-detail', kwargs={'slug': slug})
@@ -128,17 +131,11 @@ class CommentAddView(TokenRequiredMixin, CreateView):
         comment.save()
         return redirect(self.get_success_url())
 
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
-
 
 class CommentDeleteView(TokenRequiredMixin, DeleteView):
     model = Comment
     template_name_suffix = '-confirm-delete'
     success_url = None
-
-    def get_success_url(self):
-        return reverse('home')
 
     def get(self, *args, **kwargs):
         comment_id = kwargs.get('pk')
@@ -148,3 +145,6 @@ class CommentDeleteView(TokenRequiredMixin, DeleteView):
             return HttpResponseRedirect(redirect_to=self.get_success_url())
 
         return super().get(*args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('home')
