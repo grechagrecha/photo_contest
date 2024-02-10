@@ -25,3 +25,9 @@ H
 apps/users/middleware.py,0/1/015c0784eb1cec30d7ecfae8bc7b204473211dd3
 C
 apps/users/admin.py,4/1/41603a18dae2bc34fe7075f79fb8903553ef6b1a
+C
+templates/base.html,d/a/da7c237b85a69c00a9ab8c189bf63e22070fcac3
+E
+templates/footer.html,6/f/6f6da3899bb486dbf70a263671b21c8c6d60fabc
+G
+templates/messages.html,9/2/924627e410e78e0b95a7bea0cab78584c7948f33

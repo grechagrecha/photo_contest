@@ -1,5 +1,3 @@
-import pprint
-
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, View
 from django.http import HttpResponseRedirect
 from django.shortcuts import reverse, redirect
