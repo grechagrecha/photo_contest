@@ -41,7 +41,5 @@ P
 core/forms.py,9/e/9ee68e46fa14470d0da2d7cef80e214b9128e349
 Z
 *templates/core/comment-confirm-delete.html,0/1/01c21b49e19f7c72ec60e3978bdd23ec4c86580f
-L
-templates/core/add-post.html,e/0/e0f31b72521bc871c31cc856e7b3bd1b20061ec8
 O
 templates/core/post-update.html,5/5/550766626ef5d819d194967031e1d7a616557ef7
