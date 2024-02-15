@@ -31,3 +31,17 @@ E
 templates/footer.html,6/f/6f6da3899bb486dbf70a263671b21c8c6d60fabc
 G
 templates/messages.html,9/2/924627e410e78e0b95a7bea0cab78584c7948f33
+L
+templates/users/profile.html,9/e/9e238fa8e997653fa4735b8e50ece8be8d3ef4f2
+R
+"templates/users/on-validation.html,5/5/5539789af9f22b347b10948ee01b71739ca5446d
+P
+ templates/users/on-deletion.html,7/2/728bd28da2e7d9d3ab9b14acbb9d2effd7ce0dd9
+=
+core/forms.py,9/e/9ee68e46fa14470d0da2d7cef80e214b9128e349
+Z
+*templates/core/comment-confirm-delete.html,0/1/01c21b49e19f7c72ec60e3978bdd23ec4c86580f
+L
+templates/core/add-post.html,e/0/e0f31b72521bc871c31cc856e7b3bd1b20061ec8
+O
+templates/core/post-update.html,5/5/550766626ef5d819d194967031e1d7a616557ef7

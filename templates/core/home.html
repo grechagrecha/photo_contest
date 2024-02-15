@@ -22,8 +22,9 @@
                     <div class="d-flex">
                         <form method="GET" action="{% url 'home' %}">
                             <select class="form-control" name="ordering">
-                                <option value="asc">A to Z</option>
-                                <option value="desc">Z to A</option>
+                                <option value="most_recent">Most recent</option>
+                                <option value="most_liked">Most liked</option>
+                                <option value="most_commented">Most commented</option>
                             </select>
                             <input type="submit" value="Submit" class="btn btn-primary">
                         </form>
@@ -51,7 +52,7 @@
                                 <div class="comment-button">
                                     <form action="{% url 'post-detail' post.slug %}#comment-section">
                                         <button type="submit" class="btn btn-sm btn-primary justify-content-center me-1">
-                                            <span>{{ post.comment_set.count }}</span>
+                                            <span>{{ post.number_of_comments }}</span>
                                             <i class="fa fa-comment"></i>
                                         </button>
                                     </form>
@@ -60,12 +61,12 @@
                                     {% csrf_token %}
                                     {% if post.slug in user_likes %}
                                     <button type="submit" class="btn btn-sm btn-danger justify-content-center">
-                                        <span>{{ post.like_set.count }}</span>
+                                        <span>{{ post.number_of_likes }}</span>
                                         <i title="Unlike" class="fa fa-thumbs-up "></i>
                                     </button>
                                     {% else %}
                                     <button type="submit" class="btn btn-sm btn-primary justify-content-end">
-                                        <span>{{ post.like_set.count }}</span>
+                                        <span>{{ post.number_of_likes }}</span>
                                         <i title="Like" class="fa fa-thumbs-up "></i>
                                     </button>
                                     {% endif %}

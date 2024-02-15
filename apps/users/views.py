@@ -6,8 +6,10 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.views.generic import TemplateView
+from django.views.generic import ListView
 
+from core.models import Post, Like
+from core.paginator import SmartPaginator
 from .models import User
 
 
@@ -48,6 +50,85 @@ class LoginView(DjangoLoginView):
         return token
 
 
-class ProfileView(TemplateView):
-    model = User
+class ProfileView(ListView):
+    model = Post
     template_name = 'users/profile.html'
+    paginate_by = 6
+    paginator_class = SmartPaginator
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_paginator(self, *args, **kwargs):
+        return self.paginator_class(*args, request=self.request)
+
+    def get_queryset(self):
+        qs = self.model.objects.filter(
+            author=self.request.user,
+            state=Post.ModerationStates.PUBLISHED
+        ).order_by('-created_at')
+        return qs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        if self.request.user.is_authenticated:
+            likes_qs = Like.objects.filter(user=self.request.user)
+            context['user_likes'] = list(map(lambda like: like.post.slug, likes_qs))
+
+        return context
+
+
+class PostsOnValidationView(ListView):
+    model = Post
+    template_name = 'users/on-validation.html'
+    paginate_by = 6
+    paginator_class = SmartPaginator
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        qs = self.model.objects.filter(
+            author=self.request.user,
+            state=Post.ModerationStates.ON_VALIDATION
+        ).order_by('-created_at')
+        return qs
+
+    def get_paginator(self, *args, **kwargs):
+        return self.paginator_class(*args, request=self.request)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        if self.request.user.is_authenticated:
+            likes_qs = Like.objects.filter(user=self.request.user)
+            context['user_likes'] = list(map(lambda like: like.post.slug, likes_qs))
+
+        return context
+
+
+class PostsOnDeletionView(ListView):
+    model = Post
+    template_name = 'users/on-deletion.html'
+    paginate_by = 6
+    paginator_class = SmartPaginator
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        qs = self.model.objects.filter(
+            author=self.request.user,
+            state=Post.ModerationStates.ON_DELETION
+        ).order_by('-created_at')
+        return qs
+
+    def get_paginator(self, *args, **kwargs):
+        return self.paginator_class(*args, request=self.request)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        if self.request.user.is_authenticated:
+            likes_qs = Like.objects.filter(user=self.request.user)
+            context['user_likes'] = list(map(lambda like: like.post.slug, likes_qs))
+
+        return context

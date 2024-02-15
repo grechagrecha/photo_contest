@@ -11,7 +11,7 @@ Profile
         <br>
     </div>
     <div class="col-md-7">
-        <h1 class="display-6 my-3">Your published posts</h1>
+        <h1 class="display-6 my-3">Your posts on validation</h1>
         <div class="row">
             {% for post in object_list %}
             <div class="col-md-4" id="{{ post.slug }}">
@@ -54,12 +54,7 @@ Profile
                             </form>
                         </div>
                         <div class="ms-3 d-flex">
-                            <h5 class="card-body-author me-auto"><i class="fa fa-user me-2"></i>{{ post.author.username }}</h5>
-                            <form action="{% url 'post-update' post.slug %}">
-                                <button type="submit" class="btn btn-sm btn-primary justify-content-center">
-                                    <i class="fa fa-pencil-square-o"></i>
-                                </button>
-                            </form>
+                            <h5 class="card-body-author"><i class="fa fa-user me-2"></i>{{ post.author.username }}</h5>
                         </div>
                     </div>
                 </div>

@@ -1,11 +1,11 @@
-from django.views.generic import ListView, CreateView, DetailView, DeleteView, View
+from django.views.generic import ListView, CreateView, DetailView, DeleteView, View, UpdateView
 from django.http import HttpResponseRedirect
 from django.shortcuts import reverse, redirect
-from django.db.models import Q
+from django.db.models import Q, Count, F
 
 from apps.users.mixins import TokenRequiredMixin
 from .models import Post, Like, Comment
-from .forms import AddPostForm, FilterForm, AddCommentForm
+from .forms import PostAddForm, FilterForm, AddCommentForm, PostUpdateForm
 from .paginator import SmartPaginator
 
 
@@ -42,10 +42,12 @@ class HomeView(ListView):
                 Q(author__username__icontains=search_query)
             )
 
-        if sorting_order == 'asc':
-            return queryset.order_by('title')
-        if sorting_order == 'desc':
-            return queryset.order_by('-title')
+        if sorting_order == 'most_liked':
+            return queryset.order_by('-number_of_likes')
+        if sorting_order == 'most_commented':
+            return queryset.order_by('-number_of_comments')
+        if sorting_order == 'most_recent':
+            return queryset.order_by('-created_at')
         return queryset.order_by('-created_at')
 
 
@@ -62,8 +64,8 @@ class PostDetailView(DetailView):
 
 class PostAddView(TokenRequiredMixin, CreateView):
     model = Post
-    template_name = 'core/add-post.html'
-    form_class = AddPostForm
+    template_name = 'core/post-add.html'
+    form_class = PostAddForm
     success_url = None
 
     def get(self, request, *args, **kwargs):
@@ -73,7 +75,7 @@ class PostAddView(TokenRequiredMixin, CreateView):
         return reverse('home')
 
     def get_initial(self, *args, **kwargs):
-        initial = super().get_initial()
+        initial = super().get_initial(*args, **kwargs)
         initial['name'] = ''
         initial['description'] = ''
         return initial
@@ -85,6 +87,37 @@ class PostAddView(TokenRequiredMixin, CreateView):
         return redirect(self.get_success_url())
 
 
+class PostUpdateView(TokenRequiredMixin, UpdateView):
+    model = Post
+    template_name = 'core/post-update.html'
+    form_class = PostUpdateForm
+    success_url = None
+
+    def get(self, *args, **kwargs):
+        slug = kwargs.get('slug')
+        post = self.model.objects.get(slug=slug)
+
+        if self.request.user != post.author:
+            return HttpResponseRedirect(redirect_to=reverse('home'))
+
+        return super().get(*args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('home')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        return initial
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+
+        # TODO: Change to only if image was changed
+        post.state = self.model.ModerationStates.ON_VALIDATION
+        post.save()
+        return redirect(self.get_success_url())
+
+
 class PostDeleteView(TokenRequiredMixin, DeleteView):
     model = Post
     template_name_suffix = '-confirm-delete'
@@ -92,7 +125,7 @@ class PostDeleteView(TokenRequiredMixin, DeleteView):
 
     def get(self, *args, **kwargs):
         slug = kwargs.get('slug')
-        post = Post.objects.get(slug=slug)
+        post = self.model.objects.get(slug=slug)
 
         if self.request.user != post.author:
             return HttpResponseRedirect(redirect_to=reverse('home'))
@@ -112,7 +145,7 @@ class PostLikeView(TokenRequiredMixin, View):
 
 class CommentAddView(TokenRequiredMixin, CreateView):
     model = Comment
-    template_name = 'core/add-comment.html'
+    template_name = 'core/comment-add.html'
     form_class = AddCommentForm
     success_url = None
 
