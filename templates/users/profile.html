@@ -6,12 +6,12 @@ Profile
 
 {% block content %}
 
-<div class="row">
+<div class="row my-3">
     <div class="col-md-1">
         <br>
     </div>
     <div class="col-md-7">
-        <h1 class="display-6 my-3">Your published posts</h1>
+        <h1 class="display-6 mb-3">Your published posts</h1>
         <div class="row">
             {% for post in object_list %}
             <div class="col-md-4" id="{{ post.slug }}">
@@ -98,16 +98,17 @@ Profile
         </div>
         {% endif %}
     </div>
-    <div class="col-md-4 my-3">
-        <a href="{% url 'users:profile' %}" class="text-decoration-none">
-            <h2 class="text-black">Published posts</h2>
-        </a>
-        <a href="{% url 'users:on-validation' %}" class="text-decoration-none">
-            <h2 class="text-black">Posts on validation</h2>
-        </a>
-        <a href="{% url 'users:on-deletion' %}" class="text-decoration-none">
-            <h2 class="text-black">Posts on deletion</h2>
-        </a>
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-1">
+        <form method="GET" action="{% url 'users:profile' %}">
+            <select class="form-control" name="post_state">
+                <option value="published">Published posts</option>
+                <option value="on_validation">Posts on validation</option>
+                <option value="on_deletion">Posts on deletion</option>
+            </select>
+            <input type="submit" value="Submit" class="btn btn-primary my-1">
+        </form>
     </div>
 </div>
 
