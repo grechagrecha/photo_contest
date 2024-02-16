@@ -27,7 +27,9 @@ class CustomUserAdmin(UserAdmin):
                 'fields': (
                     'email',
                     'username',
-                    'avatar'
+                    'password',
+                    'avatar',
+                    'role'
                 ),
             },
         ),
@@ -51,6 +53,7 @@ class CustomUserAdmin(UserAdmin):
                     'is_superuser',
                     'groups',
                     'user_permissions',
+                    'role'
                 ),
             },
         )

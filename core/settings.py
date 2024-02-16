@@ -49,9 +49,17 @@ MIDDLEWARE = [
 
     # AllAuth
     'allauth.account.middleware.AccountMiddleware',
+
+    # Token
+    'apps.users.middleware.TokenMiddleware',
+    
+    # Restrict access to admin for non-staff users
+    'apps.users.middleware.RestrictAccessToAdminMiddleware'
 ]
 
 ROOT_URLCONF = 'core.urls'
+
+MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
 
 TEMPLATES = [
     {
@@ -64,9 +72,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-
-                # AllAuth
-                'django.template.context_processors.request',
             ],
         },
     },

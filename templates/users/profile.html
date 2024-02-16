@@ -6,6 +6,111 @@ Profile
 
 {% block content %}
 
+<div class="row my-3">
+    <div class="col-md-1">
+        <br>
+    </div>
+    <div class="col-md-7">
+        <h1 class="display-6 mb-3">Your published posts</h1>
+        <div class="row">
+            {% for post in object_list %}
+            <div class="col-md-4" id="{{ post.slug }}">
+                <div class="card mb-4 product-wap rounded-1">
+                    <div class="card rounded-0">
+                        <a href="{% url 'post-detail' post.slug %}">
+                            <img class="card-img rounded-0 img-thumbnail"
+                                 style="height: 40vh !important; width: 40vh !important; object-fit: cover !important;"
+                                 src="{{ post.image.url }}"
+                                 alt="{{ post.title }}"
+                                 title="{{ post.description }}"
+                            >
+                        </a>
+                    </div>
+                    <div>
+                        <div class="card-body d-flex">
+                            <a class="h3 d-inline-block text-truncate text-decoration-none me-auto text-nowrap"
+                               href="{% url 'post-detail' post.slug %}">{{ post.title }}</a>
+                            <div class="comment-button">
+                                <form action="{% url 'post-detail' post.slug %}#comment-section">
+                                    <button type="submit" class="btn btn-sm btn-primary justify-content-center me-1">
+                                        <span>{{ post.number_of_comments }}</span>
+                                        <i class="fa fa-comment"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            <form action="{% url 'post-like' post.slug %}" method="POST">
+                                {% csrf_token %}
+                                {% if post.slug in user_likes %}
+                                <button type="submit" class="btn btn-sm btn-danger justify-content-center">
+                                    <span>{{ post.number_of_likes }}</span>
+                                    <i title="Unlike" class="fa fa-thumbs-up "></i>
+                                </button>
+                                {% else %}
+                                <button type="submit" class="btn btn-sm btn-primary justify-content-end">
+                                    <span>{{ post.number_of_likes }}</span>
+                                    <i title="Like" class="fa fa-thumbs-up "></i>
+                                </button>
+                                {% endif %}
+                            </form>
+                        </div>
+                        <div class="ms-3 d-flex">
+                            <h5 class="card-body-author me-auto"><i class="fa fa-user me-2"></i>{{ post.author.username }}</h5>
+                            <form action="{% url 'post-update' post.slug %}">
+                                <button type="submit" class="btn btn-sm btn-primary justify-content-center">
+                                    <i class="fa fa-pencil-square-o"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% if is_paginated %}
+        <div class="row">
+            <ul class="pagination justify-content-end">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
+                       href="?{{ paginator.first_page_params }}">&laquo; First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
+                       href="?{{ page_obj.previous_page_params }}">Previous</a>
+                </li>
+                {% endif %}
+                <li class="page-item">
+                    <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a>
+                </li>
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
+                       href="?{{ page_obj.next_page_params }}"
+                       rel="next">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
+                       href="?{{ paginator.last_page_params }}">Last &raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-1">
+        <form method="GET" action="{% url 'users:profile' %}">
+            <select class="form-control" name="post_state">
+                <option value="published">Published posts</option>
+                <option value="on_validation">Posts on validation</option>
+                <option value="on_deletion">Posts on deletion</option>
+            </select>
+            <input type="submit" value="Submit" class="btn btn-primary my-1">
+        </form>
+    </div>
+</div>
 
 
-{% endblock %}
+{% endblock content %}
