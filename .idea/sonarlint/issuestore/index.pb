@@ -43,3 +43,9 @@ Z
 *templates/core/comment-confirm-delete.html,0/1/01c21b49e19f7c72ec60e3978bdd23ec4c86580f
 O
 templates/core/post-update.html,5/5/550766626ef5d819d194967031e1d7a616557ef7
+O
+templates/core/post-detail.html,5/d/5d7efe88503c68662f5d7b8f1cbd8b19382ac757
+R
+"templates/core/comment-update.html,b/3/b3b3611061f72d80b6e2237bba18348b2734eb41
+4
+.env,3/c/3c84dcdc6bbe3d7817c49dcdc327b926fea1808a

@@ -77,7 +77,10 @@
                             {% endif %}
                         </div>
                         <div class="col-10">
-                            <h6 class="display-6">{{ comment.user }}</h6>
+                            <div class="row">
+                                <h6 class="display-6">{{ comment.user.username }}</h6>
+                                <a href="{% url 'comment-update' comment.slug %}"><i class="fa fa-pencil-square-o"></i></a>
+                            </div>
                             <p class="me-auto">{{ comment.text }}</p>
                         </div>
                         {% if comment.user == request.user %}

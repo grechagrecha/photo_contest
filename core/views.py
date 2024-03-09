@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, View, UpdateView
 from django.http import HttpResponseRedirect
 from django.shortcuts import reverse, redirect
@@ -5,7 +6,7 @@ from django.db.models import Q, Count, F
 
 from apps.users.mixins import TokenRequiredMixin
 from .models import Post, Like, Comment
-from .forms import PostAddForm, FilterForm, AddCommentForm, PostUpdateForm
+from .forms import PostAddForm, FilterForm, AddCommentForm, PostUpdateForm, CommentUpdateForm
 from .paginator import SmartPaginator
 
 
@@ -163,6 +164,30 @@ class CommentAddView(TokenRequiredMixin, CreateView):
         comment.post = Post.objects.get(slug=slug)
         comment.save()
         return redirect(self.get_success_url())
+
+
+class CommentUpdateView(TokenRequiredMixin, UpdateView):
+    model = Comment
+    template_name = 'core/comment-update.html'
+    form_class = CommentUpdateForm
+    success_url = None
+
+    def get(self, *args, **kwargs):
+        comment_slug = kwargs.get('slug')
+        comment = self.model.objects.get(slug=comment_slug)
+
+        if self.request.user != comment.user:
+            messages.error(self.request, 'You are not the auhtor of the comment!')
+
+            return HttpResponseRedirect(redirect_to=self.get_success_url())
+        return super().get(*args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('home')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        return initial
 
 
 class CommentDeleteView(TokenRequiredMixin, DeleteView):
