@@ -49,3 +49,13 @@ R
 "templates/core/comment-update.html,b/3/b3b3611061f72d80b6e2237bba18348b2734eb41
 4
 .env,3/c/3c84dcdc6bbe3d7817c49dcdc327b926fea1808a
+>
+core/celery.py,f/6/f6ffe990a787052a4aefb18dbf2f0f8ee3d1bdda
+@
+core/__init__.py,c/e/ce4f796c5be8947b7ba7705fab2b891600f264e5
+C
+apps/users/tasks.py,7/7/770eb0018ea05a038a1f586125ad6c01bf441ed2
+7
+Pipfile,1/5/15af4b3d30054104e85f65a444b1db188c5deefb
+A
+core/paginator.py,6/8/6836847cff1af955a54a5e59431f96d2cb40c6f4

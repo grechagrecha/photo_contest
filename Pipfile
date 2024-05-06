@@ -17,6 +17,8 @@ django-crispy-forms = "*"
 crispy-bootstrap4 = "*"
 django-fsm = "*"
 django-service-objects = "*"
+celery = "*"
+redis = "*"
 
 [dev-packages]
 
