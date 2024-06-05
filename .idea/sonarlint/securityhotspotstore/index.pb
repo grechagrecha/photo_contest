@@ -11,8 +11,6 @@ C
 apps/users/views.py,e/8/e89b5777e4188067198f9dc19140480164a91dbb
 D
 apps/users/models.py,0/d/0dafbf12be60a998b1372c6e428ff240091d2cd7
-=
-core/views.py,4/7/4706701c005a11d84d8ae7731365c7c336e3f466
 H
 templates/core/home.html,c/a/ca1b044dd53c4adad3289a41398390dbd6589e18
 E
@@ -59,14 +57,6 @@ C
 Pipfile,1/5/15af4b3d30054104e85f65a444b1db188c5deefb
 A
 core/paginator.py,6/8/6836847cff1af955a54a5e59431f96d2cb40c6f4
-B
-core/views/home.py,e/2/e29e90fb7c7394c37861f73c337d6e527826568f
-B
-core/views/post.py,4/7/477614e5c25ebd61b74e91ff56c29f72fdc9bfa8
-B
-core/views/like.py,5/e/5eac1eca1a0894c4ef8c247ab7f1f158d866c001
-E
-core/views/comment.py,d/5/d5d0d33dcd077b4081ea68a294132d8b5c929bc9
 I
 core/views/post/detail.py,1/a/1ab00fe192df02da31ead4b2c6edb32c087b49d1
 K
