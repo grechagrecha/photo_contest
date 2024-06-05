@@ -1,6 +1,9 @@
-from celery import shared_task
+from core.celery import app
+from core.models import Post
 
 
-@shared_task
-def add(x, y):
-    return x + y
+@app.task
+def delete_post(slug):
+    post = Post.objects.get(slug=slug)
+    post.delete()
+    return f'Post {post} has been successfully deleted.'
