@@ -52,7 +52,7 @@ MIDDLEWARE = [
 
     # Token
     'apps.users.middleware.TokenMiddleware',
-    
+
     # Restrict access to admin for non-staff users
     'apps.users.middleware.RestrictAccessToAdminMiddleware'
 ]
@@ -143,3 +143,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Celery
 CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+
+POST_DELETION_COUNTDOWN = 30  # in seconds

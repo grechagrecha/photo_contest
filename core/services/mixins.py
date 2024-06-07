@@ -1,6 +1,7 @@
 
 
 class ValidationMixin:
+    result = None
     custom_validations = []
 
     def run_custom_validations(self):

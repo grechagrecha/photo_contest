@@ -19,6 +19,8 @@ django-fsm = "*"
 django-service-objects = "*"
 celery = "*"
 redis = "*"
+requests = "*"
+ipython = "*"
 
 [dev-packages]
 
