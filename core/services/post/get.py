@@ -8,14 +8,16 @@ from core.models import Post
 from core.services.mixins import ValidationMixin
 
 
-class GetPostService(ValidationMixin, Service):
+class PostGetService(ValidationMixin, Service):
+    """
+        Returns a post with a given slug if it exists, else returns None.
+    """
     slug = forms.SlugField()
 
     def process(self):
         self.run_custom_validations()
         if self.is_valid():
-            self.result = self._post
-        return self
+            return self._post
 
     @property
     @lru_cache()
