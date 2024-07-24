@@ -23,6 +23,7 @@ class Post(models.Model):
     number_of_comments = models.IntegerField(default=0)
 
     state = FSMField(default=ModerationStates.ON_VALIDATION, choices=ModerationStates.choices)
+    task_id = models.CharField(null=True)
 
     objects = models.Manager()
 

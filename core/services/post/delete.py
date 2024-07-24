@@ -1,3 +1,4 @@
+from celery import Task
 from django import forms
 from django.conf import settings
 from service_objects.fields import ModelField
@@ -17,8 +18,8 @@ class PostDeleteService(ValidationMixin, Service):
 
     custom_validations = ['_validate_slug']
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.post = None
 
     def process(self):
@@ -27,15 +28,13 @@ class PostDeleteService(ValidationMixin, Service):
         self.post = PostGetService.execute({'slug': self.cleaned_data['slug']})
         # send notification
         if self.is_valid():
-            self._delete_post()
+            return self._delete_post()
 
     def _delete_post(self):
         self.post.state = Post.ModerationStates.ON_DELETION
-
         task = tasks.delete_post.s(self.post.slug).apply_async(countdown=settings.POST_DELETION_COUNTDOWN)
         self.post.task_id = task.id
         self.post.save()
-        return task.id
 
     def _validate_user(self):
         if not self.cleaned_data['user']:
