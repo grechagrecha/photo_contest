@@ -1,4 +1,3 @@
-from celery import Task
 from django import forms
 from django.conf import settings
 from service_objects.fields import ModelField
@@ -13,17 +12,13 @@ from core.services.post.get import PostGetService
 
 
 class PostDeleteService(ValidationMixin, Service):
+    post = ModelField(Post)
     user = ModelField(User)
     slug = forms.SlugField(required=True)
 
     custom_validations = ['_validate_slug']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.post = None
-
     def process(self):
-        # validate post slug
         self.run_custom_validations()
         self.post = PostGetService.execute({'slug': self.cleaned_data['slug']})
         # send notification
@@ -45,7 +40,7 @@ class PostDeleteService(ValidationMixin, Service):
     def _validate_slug(self):
         try:
             return Post.objects.get(slug=self.cleaned_data['slug'], author=self.cleaned_data['user'])
-        except Exception as e:
+        except Exception:
             if not self.cleaned_data['slug']:
                 raise ValidationError400('Missing slug parameter')
             raise ValidationError404('Incorrect slug')

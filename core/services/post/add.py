@@ -1,3 +1,4 @@
+from django.conf import settings
 from django import forms
 from service_objects.fields import ModelField
 from service_objects.services import Service
@@ -16,17 +17,13 @@ class PostAddService(ValidationMixin, Service):
 
     custom_validations = ['_validate_name', '_validate_type']
 
-    def __init__(self):
-        super().__init__()
-        self.post = None
-
     def process(self):
         self.run_custom_validations()
         if self.is_valid():
-            self.post = self._add_post
+            return self._add_post
 
     @property
-    def _add_post(self):
+    def _add_post(self) -> Post:
         return Post.objects.create(
             title=self.cleaned_data['title'],
             description=self.cleaned_data['description'],
@@ -35,7 +32,8 @@ class PostAddService(ValidationMixin, Service):
         )
 
     def _validate_type(self):
-        if self.cleaned_data['image'].content_type.split('/')[1] != 'jpeg':
+        type = self.cleaned_data['image'].content_type.split('/')[1]
+        if type not in settings.ALLOWED_IMAGE_TYPES:
             raise ValidationError404('Incorrect type of photo')
 
     def _validate_name(self):
