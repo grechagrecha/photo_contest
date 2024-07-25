@@ -16,5 +16,9 @@ class CommentDeleteService(ValidationMixin, Service):
 
     def _delete_comment(self):
         comment = CommentGetService.execute({'slug': self.cleaned_data['slug']})
+        post_slug = comment.post.slug
+
         if comment:
             comment.delete()
+
+        return post_slug

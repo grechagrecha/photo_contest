@@ -19,7 +19,7 @@ class CommentUpdateView(TokenRequiredMixin, UpdateView):
         comment = self.model.objects.get(slug=comment_slug)
 
         if self.request.user != comment.user:
-            messages.error(self.request, 'You are not the auhtor of the comment!')
+            messages.error(self.request, 'You are not the author of the comment!')
 
             return HttpResponseRedirect(redirect_to=self.get_success_url())
         return super().get(*args, **kwargs)

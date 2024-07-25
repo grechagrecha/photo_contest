@@ -1,8 +1,9 @@
 from django import forms
+from django.conf import settings
 from service_objects.fields import ModelField
 from service_objects.services import Service
 
-from apps.api.status_codes import ValidationError401, ValidationError403
+from apps.api.status_codes import ValidationError401, ValidationError403, ValidationError404
 from apps.users.models import User
 from core.models import Post
 from core.services.mixins import ValidationMixin
@@ -17,7 +18,7 @@ class PostUpdateService(ValidationMixin, Service):
     description = forms.CharField()
     image = forms.ImageField(required=False)
 
-    custom_validations = ['_validate_author']
+    custom_validations = ['_validate_author', '_validate_type']
 
     def process(self):
         self.run_custom_validations()
@@ -41,3 +42,8 @@ class PostUpdateService(ValidationMixin, Service):
             raise ValidationError401()
         if not self.cleaned_data['user'] == post.author:
             raise ValidationError403()
+
+    def _validate_type(self):
+        img_type = self.cleaned_data['image'].content_type.split('/')[1]
+        if img_type not in settings.ALLOWED_IMAGE_TYPES:
+            raise ValidationError404('Incorrect type of photo')

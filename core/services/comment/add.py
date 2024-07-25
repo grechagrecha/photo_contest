@@ -12,17 +12,13 @@ class CommentAddService(ValidationMixin, Service):
     user = ModelField(User)
     text = forms.CharField()
 
-    comment = ModelField(Comment)
-
     custom_validations = []
 
     def process(self):
         self.run_custom_validations()
         if self.is_valid():
-            self.comment = self._add_comment
-        return self.comment
+            return self._add_comment()
 
-    @property
     def _add_comment(self):
         return Comment.objects.create(
             post=self.cleaned_data['post'],

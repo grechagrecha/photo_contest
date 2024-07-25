@@ -85,7 +85,7 @@
                         </div>
                         {% if comment.user == request.user %}
                         <div class="col-1">
-                            <a class="text-decoration-none text-black text-end" href="{% url 'delete-comment' pk=comment.pk %}">
+                            <a class="text-decoration-none text-black text-end" href="{% url 'delete-comment' slug=comment.slug %}">
                                 <h5>x</h5>
                             </a>
                         </div>
