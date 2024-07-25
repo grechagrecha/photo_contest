@@ -20,9 +20,8 @@ class PostAddService(ValidationMixin, Service):
     def process(self):
         self.run_custom_validations()
         if self.is_valid():
-            return self._add_post
+            return self._add_post()
 
-    @property
     def _add_post(self) -> Post:
         return Post.objects.create(
             title=self.cleaned_data['title'],
@@ -32,8 +31,8 @@ class PostAddService(ValidationMixin, Service):
         )
 
     def _validate_type(self):
-        type = self.cleaned_data['image'].content_type.split('/')[1]
-        if type not in settings.ALLOWED_IMAGE_TYPES:
+        img_type = self.cleaned_data['image'].content_type.split('/')[1]
+        if img_type not in settings.ALLOWED_IMAGE_TYPES:
             raise ValidationError404('Incorrect type of photo')
 
     def _validate_name(self):

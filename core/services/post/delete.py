@@ -21,7 +21,7 @@ class PostDeleteService(ValidationMixin, Service):
     def process(self):
         self.run_custom_validations()
         self.post = PostGetService.execute({'slug': self.cleaned_data['slug']})
-        # send notification
+        # TODO: send notification
         if self.is_valid():
             return self._delete_post()
 
@@ -34,7 +34,7 @@ class PostDeleteService(ValidationMixin, Service):
     def _validate_user(self):
         if not self.cleaned_data['user']:
             raise ValidationError401()
-        if not self.cleaned_data['user'] == self.post.author:
+        if not self.cleaned_data['user'] == self.cleaned_data['post'].author:
             raise ValidationError403()
 
     def _validate_slug(self):

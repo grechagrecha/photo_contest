@@ -15,9 +15,6 @@ class PostAddView(TokenRequiredMixin, CreateView):
     form_class = PostAddForm
     success_url = None
 
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
         service = PostAddService()
         try:

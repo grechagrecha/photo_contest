@@ -1,4 +1,5 @@
-from django.http import HttpResponseRedirect
+from django.core.exceptions import MultipleObjectsReturned
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import UpdateView
@@ -6,6 +7,7 @@ from django.views.generic import UpdateView
 from apps.users.mixins import TokenRequiredMixin
 from core.forms import PostUpdateForm
 from core.models import Post
+from core.services.post.update import PostUpdateService
 
 
 class PostUpdateView(TokenRequiredMixin, UpdateView):
@@ -23,6 +25,16 @@ class PostUpdateView(TokenRequiredMixin, UpdateView):
 
         return super().get(*args, **kwargs)
 
+    def post(self, request, *args, **kwargs):
+        slug = kwargs.get('slug')
+
+        service = PostUpdateService()
+        try:
+            service.execute(request.POST.dict() | {'user': request.user, 'slug': slug}, request.FILES.dict())
+        except Exception as e:
+            return HttpResponse(e)
+        return redirect(self.get_success_url())
+
     def get_success_url(self):
         return reverse('home')
 
@@ -31,9 +43,4 @@ class PostUpdateView(TokenRequiredMixin, UpdateView):
         return initial
 
     def form_valid(self, form):
-        post = form.save(commit=False)
-
-        # TODO: Change to only if image was changed
-        post.state = self.model.ModerationStates.ON_VALIDATION
-        post.save()
         return redirect(self.get_success_url())
