@@ -6,6 +6,7 @@ from apps.users.mixins import TokenRequiredMixin
 from core.models import Like
 
 
+# TODO: Спросить у ментора и переделать LikeView
 class PostLikeView(TokenRequiredMixin, View):
     def post(self, *args, **kwargs):
         slug = kwargs.get('slug')

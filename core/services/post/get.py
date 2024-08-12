@@ -2,17 +2,19 @@ from functools import lru_cache
 
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from service_objects.services import Service
+from service_objects.errors import NotFound
+from service_objects.services import ServiceWithResult
 
 from core.models import Post
-from core.services.mixins import ValidationMixin
 
 
-class PostGetService(ValidationMixin, Service):
+class PostGetService(ServiceWithResult):
     """
-        Returns a post with a given slug if it exists, else returns None.
+        Returns a post with a given slug if it exists.
     """
     slug = forms.SlugField()
+
+    custom_validations = ['_check_post_presence', ]
 
     def process(self):
         self.run_custom_validations()
@@ -26,3 +28,12 @@ class PostGetService(ValidationMixin, Service):
             return Post.objects.get(slug=self.cleaned_data['slug'])
         except (ObjectDoesNotExist, MultipleObjectsReturned):
             return None
+
+    def _check_post_presence(self):
+        if not self._post:
+            self.add_error(
+                'slug',
+                NotFound(
+                    message=f'Post with slug = {self.cleaned_data["slug"]} does not exist'
+                )
+            )

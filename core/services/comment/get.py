@@ -7,10 +7,9 @@ from service_objects.services import Service
 
 from apps.users.models import User
 from core.models import Post, Comment
-from core.services.mixins import ValidationMixin
 
 
-class CommentGetService(ValidationMixin, Service):
+class CommentGetService(Service):
     slug = forms.SlugField()
 
     def process(self):

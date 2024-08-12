@@ -4,12 +4,13 @@ from django.views.generic import ListView
 from core.forms import FilterForm
 from core.models import Post, Like
 from core.paginator import SmartPaginator
+from core.settings import HOME_PAGE_SIZE
 
 
 class HomeView(ListView):
     model = Post
     template_name = 'core/home.html'
-    paginate_by = 6
+    paginate_by = HOME_PAGE_SIZE
     paginator_class = SmartPaginator
 
     def get(self, request, *args, **kwargs):

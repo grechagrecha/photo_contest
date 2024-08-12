@@ -35,6 +35,7 @@ class RestrictAccessToAdminMiddleware:
         return response
 
     def process_request(self, request):
+        # TODO: This should be reworked
         if request.path.startswith(reverse('admin:index')):
             if request.user.is_authenticated:
                 if not request.user.is_staff:

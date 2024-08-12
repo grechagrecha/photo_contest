@@ -1,16 +1,15 @@
 from django import forms
 from django.conf import settings
 from service_objects.fields import ModelField
-from service_objects.services import Service
+from service_objects.services import ServiceWithResult
 
 from apps.api.status_codes import ValidationError401, ValidationError403, ValidationError404
 from apps.users.models import User
 from core.models import Post
-from core.services.mixins import ValidationMixin
 from core.services.post.get import PostGetService
 
 
-class PostUpdateService(ValidationMixin, Service):
+class PostUpdateService(ServiceWithResult):
     user = ModelField(User)
 
     slug = forms.SlugField()

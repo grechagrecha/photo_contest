@@ -6,17 +6,17 @@ from django.views.generic import CreateView
 from apps.users.mixins import TokenRequiredMixin
 from core.forms import PostAddForm
 from core.models import Post
-from core.services.post.add import PostAddService
+from core.services.post.create import PostCreateService
 
 
 class PostAddView(TokenRequiredMixin, CreateView):
     model = Post
-    template_name = 'core/post-add.html'
+    template_name = 'core/post-create.html'
     form_class = PostAddForm
     success_url = None
 
     def post(self, request, *args, **kwargs):
-        service = PostAddService()
+        service = PostCreateService()
         try:
             service.execute(request.POST.dict() | {'user': request.user}, request.FILES.dict())
         except Exception as e:

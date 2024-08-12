@@ -6,13 +6,13 @@ from django.views.generic import CreateView
 from apps.users.mixins import TokenRequiredMixin
 from core.forms import AddCommentForm
 from core.models import Comment, Post
-from core.services.comment.add import CommentAddService
+from core.services.comment.create import CommentAddService
 from core.services.post.get import PostGetService
 
 
 class CommentAddView(TokenRequiredMixin, CreateView):
     model = Comment
-    template_name = 'core/comment-add.html'
+    template_name = 'core/comment-create.html'
     form_class = AddCommentForm
     success_url = None
 

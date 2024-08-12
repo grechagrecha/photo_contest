@@ -8,7 +8,7 @@ from apps.users.models import User
 from core.models import Post
 
 
-class PostAddService(ServiceWithResult):
+class PostCreateService(ServiceWithResult):
     title = forms.CharField()
     description = forms.CharField()
     image = forms.ImageField()

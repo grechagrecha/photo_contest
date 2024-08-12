@@ -2,10 +2,9 @@ from django import forms
 from service_objects.services import Service
 
 from core.services.comment.get import CommentGetService
-from core.services.mixins import ValidationMixin
 
 
-class CommentDeleteService(ValidationMixin, Service):
+class CommentDeleteService(Service):
     slug = forms.SlugField()
 
     def process(self):
