@@ -43,7 +43,7 @@
             <div class="align-items-end">
                 {% if request.user.is_authenticated %}
                 <button class="btn btn-success mb-5">
-                    <a href="{% url 'add-comment' slug=post.slug %}" class="text-decoration-none text-black">Add comment</a>
+                    <a href="{% url 'comment-create' slug=post.slug %}" class="text-decoration-none text-black">Add comment</a>
                 </button>
                 {% else %}
                 <h2 class="h2">
@@ -85,7 +85,7 @@
                         </div>
                         {% if comment.user == request.user %}
                         <div class="col-1">
-                            <a class="text-decoration-none text-black text-end" href="{% url 'delete-comment' slug=comment.slug %}">
+                            <a class="text-decoration-none text-black text-end" href="{% url 'comment-delete' slug=comment.slug %}">
                                 <h5>x</h5>
                             </a>
                         </div>

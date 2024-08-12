@@ -1,15 +1,14 @@
 from django.conf import settings
 from django import forms
 from service_objects.fields import ModelField
-from service_objects.services import Service
+from service_objects.services import ServiceWithResult
 
 from apps.api.status_codes import ValidationError404
 from apps.users.models import User
 from core.models import Post
-from core.services.mixins import ValidationMixin
 
 
-class PostAddService(ValidationMixin, Service):
+class PostAddService(ServiceWithResult):
     title = forms.CharField()
     description = forms.CharField()
     image = forms.ImageField()
