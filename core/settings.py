@@ -56,14 +56,14 @@ MIDDLEWARE = [
 
     # Restrict access to admin for non-staff users
     'apps.users.middleware.RestrictAccessToAdminMiddleware',
-
-    # Debug toolbar
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
+
+if DEBUG:
+    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
 
 ROOT_URLCONF = 'core.urls'
 
-MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 TEMPLATES = [
     {
