@@ -19,7 +19,8 @@ class PostGetService(ServiceWithResult):
     def process(self):
         self.run_custom_validations()
         if self.is_valid():
-            return self._post
+            self.result = self._post
+        return self
 
     @property
     @lru_cache()

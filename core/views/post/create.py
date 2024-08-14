@@ -1,7 +1,10 @@
+from django.contrib import messages
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import CreateView
+from service_objects.services import ServiceOutcome
+from service_objects.errors import Error
 
 from apps.users.mixins import TokenRequiredMixin
 from core.forms import PostAddForm
@@ -16,18 +19,24 @@ class PostAddView(TokenRequiredMixin, CreateView):
     success_url = None
 
     def post(self, request, *args, **kwargs):
-        service = PostCreateService()
         try:
-            service.execute(request.POST.dict() | {'user': request.user}, request.FILES.dict())
-        except Exception as e:
-            return HttpResponse(e)
+            outcome = ServiceOutcome(
+                PostCreateService,
+                request.POST.dict() | {'user': request.user},
+                request.FILES.dict()
+            )
+        except Error as error:
+            # TODO: Change to more general implementation
+            for e in error.errors_dict.get('title'):
+                messages.add_message(request, messages.INFO, e)
+            return redirect('post-create')
         return redirect(self.get_success_url())
 
     def get_success_url(self):
         return reverse('home')
 
-    def get_initial(self, *args, **kwargs):
-        initial = super().get_initial(*args, **kwargs)
+    def get_initial(self):
+        initial = super().get_initial()
         initial['name'] = ''
         initial['description'] = ''
         return initial
