@@ -34,6 +34,7 @@ ADDITIONAL_APPS = [
     'allauth.socialaccount.providers.vk',
     'crispy_forms',
     'crispy_bootstrap4',
+    'debug_toolbar'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + ADDITIONAL_APPS
@@ -54,7 +55,10 @@ MIDDLEWARE = [
     'apps.users.middleware.TokenMiddleware',
 
     # Restrict access to admin for non-staff users
-    'apps.users.middleware.RestrictAccessToAdminMiddleware'
+    'apps.users.middleware.RestrictAccessToAdminMiddleware',
+
+    # Debug toolbar
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -114,6 +118,10 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend'
+]
+
+INTERNAL_IPS = [
+    '127.0.0.1',
 ]
 
 LOGIN_REDIRECT_URL = '/'
