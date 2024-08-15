@@ -1,9 +1,12 @@
+from functools import lru_cache
+
 from django import forms
 from django.conf import settings
+from service_objects.errors import ServiceObjectLogicError, NotFound, ValidationError
 from service_objects.fields import ModelField
-from service_objects.services import ServiceWithResult
+from service_objects.services import ServiceWithResult, ServiceOutcome
 
-from apps.api.status_codes import ValidationError401, ValidationError403, ValidationError404
+from apps.api.status_codes import ValidationError404
 from apps.users.models import User
 from core.models import Post
 from core.services.post.get import PostGetService
@@ -11,38 +14,62 @@ from core.services.post.get import PostGetService
 
 class PostUpdateService(ServiceWithResult):
     user = ModelField(User)
-
     slug = forms.SlugField()
     title = forms.CharField()
     description = forms.CharField()
     image = forms.ImageField(required=False)
+    post = None
 
-    custom_validations = ['_validate_author', '_validate_type']
+    custom_validations = ['_check_post_presence', '_validate_author', '_validate_type']
 
     def process(self):
+        self.post = self._post
         self.run_custom_validations()
 
         if self.is_valid():
-            return self._update_post()
+            self.result = self._update_post()
+        return self
 
     def _update_post(self) -> Post:
-        post = PostGetService.execute({'slug': self.cleaned_data['slug']})
-
         for key in ['title', 'description', 'image']:
             if self.cleaned_data[key]:
-                setattr(post, key, self.cleaned_data[key])
-        post.save()
+                setattr(self.post, key, self.cleaned_data[key])
+        self.post.save()
 
-        return post
+        return self.post
+
+    def _check_post_presence(self):
+        if not self.post:
+            self.add_error(
+                field='slug',
+                error=NotFound(
+                    message=f'Post with slug = {self.cleaned_data["slug"]} does not exist'
+                )
+            )
 
     def _validate_author(self):
-        post = PostGetService.execute({'slug': self.cleaned_data['slug']})
         if not self.cleaned_data['user']:
-            raise ValidationError401()
-        if not self.cleaned_data['user'] == post.author:
-            raise ValidationError403()
+            self.add_error(
+                'user',
+                ValidationError(message='User was not specified')
+            )
+        if not self.cleaned_data['user'] == self.post.author:
+            self.add_error(
+                'user',
+                ValidationError(message='User is not the author')
+            )
 
     def _validate_type(self):
-        img_type = self.cleaned_data['image'].content_type.split('/')[1]
-        if img_type not in settings.ALLOWED_IMAGE_TYPES:
-            raise ValidationError404('Incorrect type of photo')
+        if self.cleaned_data['image']:
+            img_type = self.cleaned_data['image'].content_type.split('/')[1]
+            if img_type not in settings.ALLOWED_IMAGE_TYPES:
+                self.add_error(
+                    'image',
+                    ValidationError(message='Incorrect type of photo')
+                )
+
+    @property
+    @lru_cache()
+    def _post(self):
+        outcome = ServiceOutcome(PostGetService, {'slug': self.cleaned_data['slug']})
+        return outcome.result
