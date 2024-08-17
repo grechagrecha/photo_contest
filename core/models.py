@@ -26,7 +26,6 @@ class Post(models.Model):
     task_id = models.CharField(null=True)
 
     objects = models.Manager()
-
     # TODO: Thumbnail
 
     def __str__(self):
@@ -38,15 +37,23 @@ class Post(models.Model):
 
         super().save()
 
-    @transition(field=state, source='on_validation', target='published')
+    @transition(field=state, source=ModerationStates.ON_VALIDATION, target=ModerationStates.PUBLISHED)
     def publish(self):
         pass
 
-    @transition(field=state, source='published', target='on_validation')
+    @transition(field=state, source=ModerationStates.PUBLISHED, target=ModerationStates.ON_VALIDATION)
     def retract(self):
         pass
 
-    @transition(field=state, source='published', target='on_deletion')
+    @transition(field=state, source=ModerationStates.ON_DELETION, target=ModerationStates.ON_VALIDATION)
+    def recover(self):
+        pass
+
+    @transition(
+        field=state,
+        source=(ModerationStates.PUBLISHED, ModerationStates.ON_VALIDATION),
+        target=ModerationStates.ON_DELETION
+    )
     def remove(self):
         pass
 

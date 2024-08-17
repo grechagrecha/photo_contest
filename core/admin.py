@@ -17,7 +17,7 @@ class PostAdmin(ModelAdmin):
         'author',
         'state',
     ]
-    actions = ['publish', 'retract']
+    actions = ['publish', 'retract', 'recover']
 
     @admin.action(description='Publish selected posts')
     def publish(self, request, queryset):
@@ -34,6 +34,14 @@ class PostAdmin(ModelAdmin):
                 post.retract()
                 post.save()
         messages.success(request, 'Posts have been successfully retracted!')
+
+    @admin.action(description='Recover selected posts')
+    def recover(self, request, queryset):
+        for post in queryset:
+            if post.state == Post.ModerationStates.ON_DELETION:
+                post.recover()
+                post.save()
+        messages.success(request, 'Posts have been successfully recovered!')
 
 
 class LikeAdmin(ModelAdmin):
