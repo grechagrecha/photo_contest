@@ -46,6 +46,10 @@ class Post(models.Model):
     def retract(self):
         pass
 
+    @transition(field=state, source='published', target='on_deletion')
+    def remove(self):
+        pass
+
 
 class Like(models.Model):
     objects = models.Manager()
