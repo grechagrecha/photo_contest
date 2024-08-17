@@ -31,6 +31,9 @@ class PostUpdateService(ServiceWithResult):
         return self
 
     def _update_post(self) -> Post:
+        if self.cleaned_data['image']:
+            self.post.retract()
+
         for key in ['title', 'description', 'image']:
             if self.cleaned_data[key]:
                 setattr(self.post, key, self.cleaned_data[key])
