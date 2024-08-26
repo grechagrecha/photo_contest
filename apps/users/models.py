@@ -19,7 +19,7 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save()
 
-        group = Group.objects.get(name='Customers')
+        group, created = Group.objects.get_or_create(name='Customers')
         user.groups.add(group)
 
         return user
@@ -31,8 +31,8 @@ class UserManager(BaseUserManager):
         superuser.is_staff = True
 
         superuser.role = superuser.Roles.ADMIN
-        admin_group = Group.objects.get(name='Admins')
-        customer_group = Group.objects.get(name='Customers')
+        admin_group, created = Group.objects.get_or_create(name='Admins')
+        customer_group, created = Group.objects.get_or_create(name='Customers')
         customer_group.user_set.remove(superuser)
         superuser.groups.add(admin_group)
 

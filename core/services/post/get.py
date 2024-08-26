@@ -26,7 +26,7 @@ class PostGetService(ServiceWithResult):
     @lru_cache()
     def _post(self) -> Post | None:
         try:
-            return Post.objects.get(slug=self.cleaned_data['slug'])
+            return Post.objects.get(slug=self.cleaned_data['slug'], state=Post.ModerationStates.PUBLISHED)
         except (ObjectDoesNotExist, MultipleObjectsReturned):
             return None
 

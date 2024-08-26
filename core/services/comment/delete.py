@@ -1,23 +1,29 @@
-from django import forms
-from service_objects.services import Service
+from functools import lru_cache
 
+from django import forms
+from service_objects.services import ServiceWithResult, ServiceOutcome
+
+from core.models import Comment
 from core.services.comment.get import CommentGetService
 
 
-class CommentDeleteService(Service):
+class CommentDeleteService(ServiceWithResult):
     slug = forms.SlugField()
+    comment = None
 
     def process(self):
+        self.comment = self._comment
         self.run_custom_validations()
 
         if self.is_valid():
-            self._delete_comment()
+            self.result = self._delete_comment()
+        return self
 
     def _delete_comment(self):
-        comment = CommentGetService.execute({'slug': self.cleaned_data['slug']})
-        post_slug = comment.post.slug
+        return self.comment.delete()
 
-        if comment:
-            comment.delete()
-
-        return post_slug
+    @property
+    @lru_cache()
+    def _comment(self) -> Comment:
+        outcome = ServiceOutcome(CommentGetService, {'slug': self.cleaned_data['slug']})
+        return outcome.result

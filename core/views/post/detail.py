@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import Http404
 from django.shortcuts import render
 from django.views.generic import DetailView
 from service_objects.errors import ServiceObjectLogicError
@@ -19,7 +19,7 @@ class PostDetailView(DetailView):
             outcome = ServiceOutcome(PostGetService, kwargs)
             context['result'] = outcome.result
         except ServiceObjectLogicError as error:
-            return render(request, self.template_name, context | {'error_message': error}, status=500)
+            return render(request, self.template_name, context | {'error_message': error}, status=404)
         return render(request, self.template_name, context, status=200)
 
     def get_context_data(self, **kwargs):

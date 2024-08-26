@@ -17,13 +17,13 @@ class Post(models.Model):
     image = models.ImageField(upload_to='images/posts/')
     slug = models.SlugField(default=uuid.uuid4, editable=False)
     description = models.CharField(default='Empty description.', blank=True, max_length=1000)
-    created_at = models.DateTimeField(verbose_name='Date created', auto_now_add=True)
-    updated_at = models.DateTimeField(verbose_name='Last updated at', auto_now=True)
-    number_of_likes = models.IntegerField(default=0)
-    number_of_comments = models.IntegerField(default=0)
+    created_at = models.DateTimeField(verbose_name='Date created', auto_now_add=True, editable=False)
+    updated_at = models.DateTimeField(verbose_name='Last updated at', auto_now=True, editable=False)
+    number_of_likes = models.IntegerField(default=0, editable=False)
+    number_of_comments = models.IntegerField(default=0, editable=False)
 
     state = FSMField(default=ModerationStates.ON_VALIDATION, choices=ModerationStates.choices)
-    task_id = models.CharField(null=True)
+    task_id = models.CharField(null=True, editable=False)
 
     objects = models.Manager()
     # TODO: Thumbnail
