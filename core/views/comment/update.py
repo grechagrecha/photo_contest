@@ -1,11 +1,12 @@
-from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import UpdateView
+from service_objects.services import ServiceOutcome
 
 from apps.users.mixins import TokenRequiredMixin
 from core.forms import CommentUpdateForm
 from core.models import Comment
+from core.services.comment.update import CommentUpdateService
 
 
 class CommentUpdateView(TokenRequiredMixin, UpdateView):
@@ -14,18 +15,15 @@ class CommentUpdateView(TokenRequiredMixin, UpdateView):
     form_class = CommentUpdateForm
     success_url = None
 
-    def get(self, *args, **kwargs):
-        comment_slug = kwargs.get('slug')
-        comment = self.model.objects.get(slug=comment_slug)
+    def post(self, request, *args, **kwargs):
+        outcome = ServiceOutcome(
+            CommentUpdateService,
+            request.POST.dict() | {'slug': kwargs['slug'], 'user': request.user}
+        )
+        return redirect(self.get_success_url(outcome.result.post.slug))
 
-        if self.request.user != comment.user:
-            messages.error(self.request, 'You are not the auhtor of the comment!')
-
-            return HttpResponseRedirect(redirect_to=self.get_success_url())
-        return super().get(*args, **kwargs)
-
-    def get_success_url(self):
-        return reverse('home')
+    def get_success_url(self, post_slug):
+        return reverse('post-detail', kwargs={'slug': post_slug})
 
     def get_initial(self):
         initial = super().get_initial()

@@ -4,12 +4,13 @@ from django.views.generic import ListView
 from core.forms import FilterForm
 from core.models import Post, Like
 from core.paginator import SmartPaginator
+from core.settings import HOME_PAGE_SIZE
 
 
 class HomeView(ListView):
     model = Post
     template_name = 'core/home.html'
-    paginate_by = 6
+    paginate_by = HOME_PAGE_SIZE
     paginator_class = SmartPaginator
 
     def get(self, request, *args, **kwargs):
@@ -28,7 +29,9 @@ class HomeView(ListView):
         return context
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(state='published')
+        queryset = super().get_queryset().filter(
+            Q(state=Post.ModerationStates.PUBLISHED) | Q(state=Post.ModerationStates.ON_DELETION)
+        )
         search_query = self.request.GET.get('search_query', None)
         sorting_order = self.request.GET.get('ordering', None)
 

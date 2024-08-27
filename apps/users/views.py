@@ -4,14 +4,13 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.views import LoginView as DjangoLoginView
-from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView, DetailView
 
+from apps.users.models import User
 from core.models import Post, Like
 from core.paginator import SmartPaginator
-from .models import User
 
 
 class LoginView(DjangoLoginView):
@@ -51,9 +50,18 @@ class LoginView(DjangoLoginView):
         return token
 
 
-class ProfileView(ListView):
-    model = Post
+class ProfileView(DetailView):
+    model = User
     template_name = 'users/profile.html'
+    context_object_name = 'user'
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+
+class YourPostsView(ListView):
+    model = Post
+    template_name = 'users/your_posts.html'
     paginate_by = 6
     paginator_class = SmartPaginator
 

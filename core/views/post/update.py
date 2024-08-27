@@ -1,11 +1,17 @@
-from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
+from django.core.exceptions import MultipleObjectsReturned
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.views.generic import UpdateView
+from django.views import View
+from django.views.generic import UpdateView, TemplateView
+from service_objects.errors import ServiceObjectLogicError
+from service_objects.services import ServiceOutcome
 
 from apps.users.mixins import TokenRequiredMixin
 from core.forms import PostUpdateForm
 from core.models import Post
+from core.services.post.get import PostGetService
+from core.services.post.update import PostUpdateService
 
 
 class PostUpdateView(TokenRequiredMixin, UpdateView):
@@ -15,13 +21,29 @@ class PostUpdateView(TokenRequiredMixin, UpdateView):
     success_url = None
 
     def get(self, *args, **kwargs):
-        slug = kwargs.get('slug')
-        post = self.model.objects.get(slug=slug)
+        outcome = ServiceOutcome(PostGetService, kwargs)
+        post = outcome.result
 
         if self.request.user != post.author:
             return HttpResponseRedirect(redirect_to=reverse('home'))
 
         return super().get(*args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        super().post(request, *args, **kwargs)
+        slug = kwargs.get('slug')
+        context = self.get_context_data()
+        try:
+            outcome = ServiceOutcome(
+                PostUpdateService,
+                request.POST.dict() | {'user': request.user, 'slug': slug},
+                request.FILES.dict()
+            )
+            context['result'] = outcome.result
+        except ServiceObjectLogicError as error:
+            return render(request, self.template_name, context | {'error_message': error}, status=500)
+        # return redirect(self.get_success_url())
+        return redirect(reverse('post-detail', kwargs={'slug': slug, }))
 
     def get_success_url(self):
         return reverse('home')
@@ -31,9 +53,4 @@ class PostUpdateView(TokenRequiredMixin, UpdateView):
         return initial
 
     def form_valid(self, form):
-        post = form.save(commit=False)
-
-        # TODO: Change to only if image was changed
-        post.state = self.model.ModerationStates.ON_VALIDATION
-        post.save()
         return redirect(self.get_success_url())

@@ -34,6 +34,7 @@ ADDITIONAL_APPS = [
     'allauth.socialaccount.providers.vk',
     'crispy_forms',
     'crispy_bootstrap4',
+    'debug_toolbar'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + ADDITIONAL_APPS
@@ -52,14 +53,17 @@ MIDDLEWARE = [
 
     # Token
     'apps.users.middleware.TokenMiddleware',
-    
+
     # Restrict access to admin for non-staff users
-    'apps.users.middleware.RestrictAccessToAdminMiddleware'
+    'apps.users.middleware.RestrictAccessToAdminMiddleware',
 ]
+
+if DEBUG:
+    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
 
 ROOT_URLCONF = 'core.urls'
 
-MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 TEMPLATES = [
     {
@@ -116,6 +120,20 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
+SOCIALACCOUNT_PROVIDERS = {
+    'vk': {
+        'APP': {
+            'client_id': os.environ.get('VK_CLIENT_ID'),
+            'secret': os.environ.get('VK_SECRET'),
+            'key': os.environ.get('VK_KEY')
+        }
+    }
+}
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 SITE_ID = 1
@@ -135,6 +153,9 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = 'media/'
 
+HOME_PAGE_SIZE = 6
+ALLOWED_IMAGE_TYPES = ('jpeg', 'png')
+
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap4'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -143,3 +164,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Celery
 CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+
+POST_DELETION_COUNTDOWN = 1440  # in seconds
