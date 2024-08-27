@@ -10,7 +10,7 @@
         <a class="nav-link text-decoration-none" href="{% url 'users:login' %}">Login</a>
         <a class="nav-link text-decoration-none" href="{% url 'account_signup' %}">Sign up</a>
         {% else %}
-        <a class="nav-link text-decoration-none" href="{% url 'users:profile' %}">Profile</a>
+        <a class="nav-link text-decoration-none" href="{% url 'users:profile' pk=user.pk %}">Profile</a>
         <a class="nav-link text-decoration-none" href="{% url 'account_logout' %}">Log out</a>
         {% endif %}
     </div>
