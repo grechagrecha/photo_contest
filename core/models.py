@@ -66,13 +66,14 @@ class Like(models.Model):
 
     @classmethod
     def like_toggle(cls, user, slug):
-        # Think about it
+        # TODO: Think about it
         post = Post.objects.get(slug=slug)
         like, created = Like.objects.get_or_create(post=post, user=user)
 
         if not created:
             like.delete()
         post.save()
+        return created
 
 
 class Comment(models.Model):

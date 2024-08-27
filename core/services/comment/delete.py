@@ -20,13 +20,14 @@ class CommentDeleteService(ServiceWithResult):
     def process(self):
         self.comment = self._comment
         self.run_custom_validations()
-
         if self.is_valid():
             self.result = self._delete_comment()
         return self
 
     def _delete_comment(self):
-        return self.comment.delete()
+        post_slug = self.comment.post.slug
+        self.comment.delete()
+        return post_slug
 
     @property
     @lru_cache()

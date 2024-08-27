@@ -23,11 +23,12 @@ class CommentDeleteView(TokenRequiredMixin, DeleteView):
 
     def post(self, request, *args, **kwargs):
         try:
-            outcome = ServiceOutcome(CommentDeleteService, request.POST.dict() | {'user': request.user, })
+            outcome = ServiceOutcome(CommentDeleteService, request.POST.dict() | kwargs | {'user': request.user})
+            self.kwargs['post_slug'] = outcome.result
             return redirect(self.get_success_url())
         except ServiceObjectLogicError as e:
             messages.error(request, message=f'{e}')
             return redirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse('post-detail', kwargs={'slug': self.kwargs['slug']})
+        return reverse('post-detail', kwargs={'slug': self.kwargs['post_slug']})

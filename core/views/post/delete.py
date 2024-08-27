@@ -1,8 +1,7 @@
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.views.generic import View, DeleteView
+from django.views.generic import DeleteView
 from service_objects.errors import Error
 from service_objects.services import ServiceOutcome
 
@@ -18,7 +17,7 @@ class PostDeleteView(TokenRequiredMixin, DeleteView):
 
     def post(self, request, *args, **kwargs):
         try:
-            outcome = ServiceOutcome(PostDeleteService, kwargs | {'user': request.user})
+            outcome = ServiceOutcome(PostDeleteService, request.POST.dict() | kwargs | {'user': request.user})
         except Error as e:
             messages.error(request, f'Something unexpected happened: {e}')
             return redirect(reverse('post-detail', kwargs={'slug': kwargs.get('slug')}))

@@ -32,7 +32,9 @@ class PostUpdateService(ServiceWithResult):
     def _update_post(self) -> Post:
         # TODO: Extract this to separate validation
         if self.cleaned_data['image']:
+            # TODO: Send notification that post was retracted
             self.post.retract()
+            self.post.save()
 
         for key in ['title', 'description', 'image']:
             if self.cleaned_data[key]:

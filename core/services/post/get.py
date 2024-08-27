@@ -13,25 +13,27 @@ class PostGetService(ServiceWithResult):
         Returns a post with a given slug if it exists.
     """
     slug = forms.SlugField()
+    post = None
 
     custom_validations = ['_check_post_presence', ]
 
     def process(self):
+        self.post = self._post
         self.run_custom_validations()
         if self.is_valid():
-            self.result = self._post
+            self.result = self.post
         return self
 
     @property
     @lru_cache()
     def _post(self) -> Post | None:
         try:
-            return Post.objects.get(slug=self.cleaned_data['slug'], state=Post.ModerationStates.PUBLISHED)
+            return Post.objects.get(slug=self.cleaned_data['slug'])
         except (ObjectDoesNotExist, MultipleObjectsReturned):
             return None
 
     def _check_post_presence(self):
-        if not self._post:
+        if not self.post:
             self.add_error(
                 'slug',
                 NotFound(

@@ -23,6 +23,7 @@ class CommentCreateService(ServiceWithResult):
         self.run_custom_validations()
         if self.is_valid():
             self.result = self._create_comment()
+            self.post.save()
         return self
 
     def _create_comment(self):
