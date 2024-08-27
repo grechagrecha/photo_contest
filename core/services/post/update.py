@@ -24,7 +24,6 @@ class PostUpdateService(ServiceWithResult):
     def process(self):
         self.post = self._post
         self.run_custom_validations()
-
         if self.is_valid():
             self.result = self._update_post()
         return self

@@ -14,5 +14,6 @@ class LikeToggleService(ServiceWithResult):
 
     def process(self):
         self.run_custom_validations()
-        self.result = Like.like_toggle(self.cleaned_data['user'], self.cleaned_data['slug'])
+        if self.is_valid():
+            self.result = Like.like_toggle(self.cleaned_data['user'], self.cleaned_data['slug'])
         return self

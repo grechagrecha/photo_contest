@@ -22,7 +22,6 @@ class PostDeleteService(ServiceWithResult):
     def process(self):
         self.post = self._post
         self.run_custom_validations()
-
         if self.is_valid():
             self.result = self._delete_post()
         return self
