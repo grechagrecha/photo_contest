@@ -120,6 +120,16 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
+SOCIALACCOUNT_PROVIDERS = {
+    'vk': {
+        'APP': {
+            'client_id': os.environ.get('VK_CLIENT_ID'),
+            'secret': os.environ.get('VK_SECRET'),
+            'key': os.environ.get('VK_KEY')
+        }
+    }
+}
+
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
