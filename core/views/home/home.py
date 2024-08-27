@@ -29,7 +29,9 @@ class HomeView(ListView):
         return context
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(state=Post.ModerationStates.PUBLISHED)
+        queryset = super().get_queryset().filter(
+            Q(state=Post.ModerationStates.PUBLISHED) | Q(state=Post.ModerationStates.ON_DELETION)
+        )
         search_query = self.request.GET.get('search_query', None)
         sorting_order = self.request.GET.get('ordering', None)
 
