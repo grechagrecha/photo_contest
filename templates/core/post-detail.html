@@ -30,10 +30,22 @@
     </div>
 
     {% if request.user == post.author %}
-    <div class="col-lg-4 mb-5">
+    <div class="col-lg-9 mb-5">
+        <button class="btn btn-primary">
+            <a href="{% url 'post-update' slug=post.slug %}" class="text-black text-decoration-none">Update post</a>
+        </button>
+        {% if post.state != 'on_deletion' %}
         <button class="btn btn-danger">
             <a href="{% url 'post-delete' slug=post.slug %}" class="text-black text-decoration-none">Delete post</a>
         </button>
+        {% else %}
+        <form action="{% url 'post-recover' post.slug %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button class="btn btn-success" type="submit">
+                <a class="text-black text-decoration-none">Recover post</a>
+            </button>
+        </form>
+        {% endif %}
     </div>
     {% endif %}
 
@@ -43,7 +55,8 @@
             <div class="align-items-end">
                 {% if request.user.is_authenticated %}
                 <button class="btn btn-success mb-5">
-                    <a href="{% url 'comment-create' slug=post.slug %}" class="text-decoration-none text-black">Add comment</a>
+                    <a href="{% url 'comment-create' slug=post.slug %}" class="text-decoration-none text-black">Add
+                        comment</a>
                 </button>
                 {% else %}
                 <h2 class="h2">
@@ -85,7 +98,8 @@
                         </div>
                         {% if comment.user == request.user %}
                         <div class="col-1">
-                            <a class="text-decoration-none text-black text-end" href="{% url 'comment-delete' slug=comment.slug %}">
+                            <a class="text-decoration-none text-black text-end"
+                               href="{% url 'comment-delete' slug=comment.slug %}">
                                 <h5>x</h5>
                             </a>
                         </div>
