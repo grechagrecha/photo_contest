@@ -1,20 +1,25 @@
+from functools import lru_cache
+
 from django import forms
 from service_objects.errors import ValidationError
 from service_objects.fields import ModelField
-from service_objects.services import ServiceWithResult
+from service_objects.services import ServiceWithResult, ServiceOutcome
 
 from apps.users.models import User
-from core.models import Post, Comment
+from core.models import Comment
+from core.services.post.get import PostGetService
 
 
-class CommentAddService(ServiceWithResult):
-    post = ModelField(Post)
+class CommentCreateService(ServiceWithResult):
+    slug = forms.SlugField()
     user = ModelField(User)
     text = forms.CharField()
+    post = None
 
-    custom_validations = ['_check_if_user_logged_in', '_check_if_text_empty']
+    custom_validations = ['_check_if_user_logged_in', '_check_if_text_empty', '_check_post_presence']
 
     def process(self):
+        self.post = self._post
         self.run_custom_validations()
         if self.is_valid():
             self.result = self._create_comment()
@@ -22,10 +27,16 @@ class CommentAddService(ServiceWithResult):
 
     def _create_comment(self):
         return Comment.objects.create(
-            post=self.cleaned_data['post'],
+            post=self.post,
             user=self.cleaned_data['user'],
             text=self.cleaned_data['text']
         )
+
+    @property
+    @lru_cache()
+    def _post(self):
+        outcome = ServiceOutcome(PostGetService, {'slug': self.cleaned_data['slug']})
+        return outcome.result
 
     def _check_if_user_logged_in(self):
         if not self.cleaned_data['user'].is_authenticated:
@@ -42,7 +53,7 @@ class CommentAddService(ServiceWithResult):
             )
 
     def _check_post_presence(self):
-        if not self.cleaned_data['post']:
+        if not self.post:
             self.add_error(
                 'post',
                 ValidationError(message=f'Post was not provided')

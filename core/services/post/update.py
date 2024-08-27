@@ -30,6 +30,7 @@ class PostUpdateService(ServiceWithResult):
         return self
 
     def _update_post(self) -> Post:
+        # TODO: Extract this to separate validation
         if self.cleaned_data['image']:
             self.post.retract()
 
