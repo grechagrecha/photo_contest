@@ -26,6 +26,7 @@ class Post(models.Model):
     task_id = models.CharField(null=True, editable=False)
 
     objects = models.Manager()
+
     # TODO: Thumbnail
 
     def __str__(self):

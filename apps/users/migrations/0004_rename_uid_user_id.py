@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('users', '0003_remove_user_id_remove_user_uuid_user_uid'),
     ]

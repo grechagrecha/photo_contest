@@ -15,10 +15,10 @@
         </div>
         <div class="row mb-5">
             <a href="{{ post.image.url }}">
-                <img src="{{ post.image.url }}"
-                     alt="{{ post.title }}"
-                     style="height: 40vh !important; width: 40vh !important; object-fit: cover !important;"
+                <img alt="{{ post.title }}"
                      class="img-thumbnail"
+                     src="{{ post.image.url }}"
+                     style="height: 40vh !important; width: 40vh !important; object-fit: cover !important;"
                 >
             </a>
         </div>
@@ -32,11 +32,11 @@
     {% if request.user == post.author %}
     <div class="col-lg-9 mb-5">
         <button class="btn btn-primary">
-            <a href="{% url 'post-update' slug=post.slug %}" class="text-black text-decoration-none">Update post</a>
+            <a class="text-black text-decoration-none" href="{% url 'post-update' slug=post.slug %}">Update post</a>
         </button>
         {% if post.state != 'on_deletion' %}
         <button class="btn btn-danger">
-            <a href="{% url 'post-delete' slug=post.slug %}" class="text-black text-decoration-none">Delete post</a>
+            <a class="text-black text-decoration-none" href="{% url 'post-delete' slug=post.slug %}">Delete post</a>
         </button>
         {% else %}
         <form action="{% url 'post-recover' post.slug %}" method="post" style="display: inline;">
@@ -55,7 +55,7 @@
             <div class="align-items-end">
                 {% if request.user.is_authenticated %}
                 <button class="btn btn-success mb-5">
-                    <a href="{% url 'comment-create' slug=post.slug %}" class="text-decoration-none text-black">Add
+                    <a class="text-decoration-none text-black" href="{% url 'comment-create' slug=post.slug %}">Add
                         comment</a>
                 </button>
                 {% else %}
@@ -76,15 +76,15 @@
                     <div class="d-flex">
                         <div class="col-1" id="avatars">
                             {% if comment.user.avatar.url != None %}
-                            <img class="img-thumbnail rounded-circle me-3" src="{{ comment.user.avatar.url }}"
+                            <img alt="{{ comment.user.username }}" class="img-thumbnail rounded-circle me-3"
+                                 src="{{ comment.user.avatar.url }}"
                                  style="height: 10vh !important; width: 10vh !important; object-fit: cover !important;"
-                                 alt="{{ comment.user.username }}"
                                  title="{{ comment.user.username }}"
                             >
                             {% else %}
-                            <img class="img-thumbnail rounded-circle me-3" src="{% static 'users/404.jpg' %}"
+                            <img alt="{{ comment.user.username }}" class="img-thumbnail rounded-circle me-3"
+                                 src="{% static 'users/404.jpg' %}"
                                  style="height: 10vh !important; width: 10vh !important; object-fit: cover !important;"
-                                 alt="{{ comment.user.username }}"
                                  title="{{ comment.user.username }}"
                             >
                             {% endif %}

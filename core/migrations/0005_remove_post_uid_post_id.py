@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('core', '0004_rename_id_post_uid'),
     ]
@@ -17,7 +16,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='post',
             name='id',
-            field=models.BigAutoField(auto_created=True, default=None, primary_key=True, serialize=False, verbose_name='ID'),
+            field=models.BigAutoField(auto_created=True, default=None, primary_key=True, serialize=False,
+                                      verbose_name='ID'),
             preserve_default=False,
         ),
     ]

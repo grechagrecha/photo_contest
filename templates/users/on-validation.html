@@ -18,10 +18,10 @@ Profile
                 <div class="card mb-4 product-wap rounded-1">
                     <div class="card rounded-0">
                         <a href="{% url 'post-detail' post.slug %}">
-                            <img class="card-img rounded-0 img-thumbnail"
-                                 style="height: 40vh !important; width: 40vh !important; object-fit: cover !important;"
+                            <img alt="{{ post.title }}"
+                                 class="card-img rounded-0 img-thumbnail"
                                  src="{{ post.image.url }}"
-                                 alt="{{ post.title }}"
+                                 style="height: 40vh !important; width: 40vh !important; object-fit: cover !important;"
                                  title="{{ post.description }}"
                             >
                         </a>
@@ -32,7 +32,7 @@ Profile
                                href="{% url 'post-detail' post.slug %}">{{ post.title }}</a>
                             <div class="comment-button">
                                 <form action="{% url 'post-detail' post.slug %}#comment-section">
-                                    <button type="submit" class="btn btn-sm btn-primary justify-content-center me-1">
+                                    <button class="btn btn-sm btn-primary justify-content-center me-1" type="submit">
                                         <span>{{ post.number_of_comments }}</span>
                                         <i class="fa fa-comment"></i>
                                     </button>
@@ -41,14 +41,14 @@ Profile
                             <form action="{% url 'post-like' post.slug %}" method="POST">
                                 {% csrf_token %}
                                 {% if post.slug in user_likes %}
-                                <button type="submit" class="btn btn-sm btn-danger justify-content-center">
+                                <button class="btn btn-sm btn-danger justify-content-center" type="submit">
                                     <span>{{ post.number_of_likes }}</span>
-                                    <i title="Unlike" class="fa fa-thumbs-up "></i>
+                                    <i class="fa fa-thumbs-up " title="Unlike"></i>
                                 </button>
                                 {% else %}
-                                <button type="submit" class="btn btn-sm btn-primary justify-content-end">
+                                <button class="btn btn-sm btn-primary justify-content-end" type="submit">
                                     <span>{{ post.number_of_likes }}</span>
-                                    <i title="Like" class="fa fa-thumbs-up "></i>
+                                    <i class="fa fa-thumbs-up " title="Like"></i>
                                 </button>
                                 {% endif %}
                             </form>
@@ -94,13 +94,13 @@ Profile
         {% endif %}
     </div>
     <div class="col-md-4 my-3">
-        <a href="{% url 'users:profile' %}" class="text-decoration-none">
+        <a class="text-decoration-none" href="{% url 'users:profile' %}">
             <h2 class="text-black">Published posts</h2>
         </a>
-        <a href="{% url 'users:on-validation' %}" class="text-decoration-none">
+        <a class="text-decoration-none" href="{% url 'users:on-validation' %}">
             <h2 class="text-black">Posts on validation</h2>
         </a>
-        <a href="{% url 'users:on-deletion' %}" class="text-decoration-none">
+        <a class="text-decoration-none" href="{% url 'users:on-deletion' %}">
             <h2 class="text-black">Posts on deletion</h2>
         </a>
     </div>
