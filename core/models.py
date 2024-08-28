@@ -17,15 +17,15 @@ class Post(models.Model):
     image = models.ImageField(upload_to='images/posts/')
     slug = models.SlugField(default=uuid.uuid4, editable=False)
     description = models.CharField(default='Empty description.', blank=True, max_length=1000)
-    created_at = models.DateTimeField(verbose_name='Date created', auto_now_add=True)
-    updated_at = models.DateTimeField(verbose_name='Last updated at', auto_now=True)
-    number_of_likes = models.IntegerField(default=0)
-    number_of_comments = models.IntegerField(default=0)
+    created_at = models.DateTimeField(verbose_name='Date created', auto_now_add=True, editable=False)
+    updated_at = models.DateTimeField(verbose_name='Last updated at', auto_now=True, editable=False)
+    number_of_likes = models.IntegerField(default=0, editable=False)
+    number_of_comments = models.IntegerField(default=0, editable=False)
 
     state = FSMField(default=ModerationStates.ON_VALIDATION, choices=ModerationStates.choices)
+    task_id = models.CharField(null=True, editable=False)
 
     objects = models.Manager()
-
     # TODO: Thumbnail
 
     def __str__(self):
@@ -37,12 +37,24 @@ class Post(models.Model):
 
         super().save()
 
-    @transition(field=state, source='on_validation', target='published')
+    @transition(field=state, source=ModerationStates.ON_VALIDATION, target=ModerationStates.PUBLISHED)
     def publish(self):
         pass
 
-    @transition(field=state, source='published', target='on_validation')
+    @transition(field=state, source=ModerationStates.PUBLISHED, target=ModerationStates.ON_VALIDATION)
     def retract(self):
+        pass
+
+    @transition(field=state, source=ModerationStates.ON_DELETION, target=ModerationStates.ON_VALIDATION)
+    def recover(self):
+        pass
+
+    @transition(
+        field=state,
+        source=(ModerationStates.PUBLISHED, ModerationStates.ON_VALIDATION),
+        target=ModerationStates.ON_DELETION
+    )
+    def remove(self):
         pass
 
 
@@ -54,22 +66,23 @@ class Like(models.Model):
 
     @classmethod
     def like_toggle(cls, user, slug):
-        # Think about it
+        # TODO: Think about it
         post = Post.objects.get(slug=slug)
         like, created = Like.objects.get_or_create(post=post, user=user)
 
         if not created:
             like.delete()
         post.save()
+        return created
 
 
 class Comment(models.Model):
     objects = models.Manager()
 
+    slug = models.SlugField(default=uuid.uuid4, editable=False)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
     text = models.CharField(max_length=300)
 
     def __str__(self):
-        return f'Comment by {self.user} on {self.post.title}'
+        return f'Comment by {self.user.username} on {self.post.title}'

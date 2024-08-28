@@ -70,6 +70,23 @@ class PostUpdateForm(forms.ModelForm):
         ]
 
 
+class CommentUpdateForm(forms.ModelForm):
+    text = forms.CharField(
+        max_length=1000,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+
+    class Meta:
+        model = Comment
+        fields = [
+            'text'
+        ]
+
+
 class AddCommentForm(forms.ModelForm):
     text = forms.CharField(
         max_length=300,

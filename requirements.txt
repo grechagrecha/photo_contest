@@ -1,36 +1,54 @@
 -i https://pypi.org/simple
-asgiref==3.7.2; python_version >= '3.7'
-certifi==2023.11.17; python_version >= '3.6'
-cffi==1.16.0; python_version >= '3.8'
+amqp==5.2.0; python_version >= '3.6'
+asgiref==3.8.1; python_version >= '3.8'
+asttokens==2.4.1
+billiard==4.2.0; python_version >= '3.7'
+celery==5.4.0; python_version >= '3.8'
+certifi==2024.7.4; python_version >= '3.6'
 charset-normalizer==3.3.2; python_full_version >= '3.7.0'
-crispy-bootstrap4==2023.1; python_version >= '3.8'
-cryptography==41.0.7
-defusedxml==0.7.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+click==8.1.7; python_version >= '3.7'
+click-didyoumean==0.3.1; python_full_version >= '3.6.2'
+click-plugins==1.1.1
+click-repl==0.3.0; python_version >= '3.6'
+crispy-bootstrap4==2024.1; python_version >= '3.8'
+decorator==5.1.1; python_version >= '3.5'
 django==4.2.7; python_version >= '3.8'
-django-allauth==0.58.2; python_version >= '3.7'
+django-allauth==64.0.0; python_version >= '3.8'
 django-appconf==1.0.6; python_version >= '3.7'
-django-crispy-forms==2.1; python_version >= '3.8'
-django-fsm==2.8.1
+django-crispy-forms==2.3; python_version >= '3.8'
+django-fsm==3.0.0
 django-imagekit==5.0.0
-django-stubs==4.2.7; python_version >= '3.8'
-django-stubs-ext==4.2.7; python_version >= '3.8'
-djangorestframework==3.14.0; python_version >= '3.6'
-idna==3.6; python_version >= '3.5'
-oauthlib==3.2.2; python_version >= '3.6'
+django-service-objects@ git+https://git.snpdev.ru/saltpepper/django-service-objects.git@82356d31d124afbc6fa8af64b01db79e4f070fa1
+django-stubs==5.0.4; python_version >= '3.8'
+django-stubs-ext==5.0.4; python_version >= '3.8'
+djangorestframework==3.15.2; python_version >= '3.8'
+executing==2.0.1; python_version >= '3.5'
+idna==3.7; python_version >= '3.5'
+ipython==8.26.0; python_version >= '3.10'
+jedi==0.19.1; python_version >= '3.6'
+kombu==5.4.0; python_version >= '3.8'
+matplotlib-inline==0.1.7; python_version >= '3.8'
+parso==0.8.4; python_version >= '3.6'
+pexpect==4.9.0; sys_platform != 'win32' and sys_platform != 'emscripten'
 pilkit==3.0
-pillow==10.1.0; python_version >= '3.8'
-psycopg==3.1.14; python_version >= '3.7'
-pycparser==2.21
-pyjwt[crypto]==2.8.0; python_version >= '3.7'
-python-dotenv==1.0.0; python_version >= '3.8'
-python3-openid==3.2.0
-pytz==2023.3.post1
-requests==2.31.0; python_version >= '3.7'
-requests-oauthlib==1.3.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
-sqlparse==0.4.4; python_version >= '3.5'
-tomli==2.0.1; python_version < '3.11'
-types-pytz==2023.3.1.1
-types-pyyaml==6.0.12.12
-typing-extensions==4.8.0; python_version >= '3.8'
-urllib3==2.1.0; python_version >= '3.8'
+pillow==10.4.0; python_version >= '3.8'
+prompt-toolkit==3.0.47; python_full_version >= '3.7.0'
+psycopg==3.2.1; python_version >= '3.8'
+ptyprocess==0.7.0
+pure-eval==0.2.3
+pygments==2.18.0; python_version >= '3.8'
+python-dateutil==2.9.0.post0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+python-dotenv==1.0.1; python_version >= '3.8'
+redis==5.0.8; python_version >= '3.7'
+requests==2.32.3; python_version >= '3.8'
+six==1.16.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+sqlparse==0.5.1; python_version >= '3.8'
+stack-data==0.6.3
+traitlets==5.14.3; python_version >= '3.8'
+types-pyyaml==6.0.12.20240808; python_version >= '3.8'
+typing-extensions==4.12.2; python_version >= '3.8'
+tzdata==2024.1; python_version >= '2'
+urllib3==2.2.2; python_version >= '3.8'
 uuid==1.30
+vine==5.1.0; python_version >= '3.6'
+wcwidth==0.2.13

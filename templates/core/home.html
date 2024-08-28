@@ -57,20 +57,22 @@
                                         </button>
                                     </form>
                                 </div>
-                                <form action="{% url 'post-like' post.slug %}" method="POST">
-                                    {% csrf_token %}
-                                    {% if post.slug in user_likes %}
-                                    <button type="submit" class="btn btn-sm btn-danger justify-content-center">
-                                        <span>{{ post.number_of_likes }}</span>
-                                        <i title="Unlike" class="fa fa-thumbs-up "></i>
-                                    </button>
-                                    {% else %}
-                                    <button type="submit" class="btn btn-sm btn-primary justify-content-end">
-                                        <span>{{ post.number_of_likes }}</span>
-                                        <i title="Like" class="fa fa-thumbs-up "></i>
-                                    </button>
-                                    {% endif %}
-                                </form>
+                                <div class="like-button">
+                                    <form action="{% url 'post-like' post.slug %}" method="POST">
+                                        {% csrf_token %}
+                                        {% if post.slug in user_likes %}
+                                        <button type="submit" class="btn btn-sm btn-danger justify-content-center">
+                                            <span>{{ post.number_of_likes }}</span>
+                                            <i title="Unlike" class="fa fa-thumbs-up "></i>
+                                        </button>
+                                        {% else %}
+                                        <button type="submit" class="btn btn-sm btn-primary justify-content-end">
+                                            <span>{{ post.number_of_likes }}</span>
+                                            <i title="Like" class="fa fa-thumbs-up "></i>
+                                        </button>
+                                        {% endif %}
+                                    </form>
+                                </div>
                             </div>
                             <div class="ms-3 d-flex">
                                 <h5 class="card-body-author"><i class="fa fa-user me-2"></i>{{ post.author.username }}</h5>
