@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group
 from django.core import exceptions
 from django.db import models
+from imagekit.models import ImageSpecField
+from pilkit.processors import ResizeToFill, Anchor
 
 
 class UserManager(BaseUserManager):
@@ -59,6 +61,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(db_index=True, max_length=255, unique=True)
     email = models.EmailField(db_index=True, unique=True)
     avatar = models.ImageField(upload_to='images/avatars/', blank=True)
+    avatar_thumbnail = ImageSpecField(
+        source='image',
+        processors=[ResizeToFill(width=360, height=360, anchor=Anchor.CENTER)],
+        format='JPEG',
+        options={'quality': 60}
+    )
     role = models.CharField(choices=Roles.choices, default=Roles.CUSTOMER)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

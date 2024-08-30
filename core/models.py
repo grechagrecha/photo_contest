@@ -2,6 +2,8 @@ import uuid
 
 from django.db import models
 from django_fsm import FSMField, transition
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill, Anchor
 
 from apps.users.models import User
 
@@ -15,6 +17,12 @@ class Post(models.Model):
     title = models.CharField(default='post', max_length=64)
     author = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
     image = models.ImageField(upload_to='images/posts/')
+    image_thumbnail = ImageSpecField(
+        source='image',
+        processors=[ResizeToFill(width=360, height=360, anchor=Anchor.CENTER)],
+        format='JPEG',
+        options={'quality': 60}
+    )
     slug = models.SlugField(default=uuid.uuid4, editable=False)
     description = models.CharField(default='Empty description.', blank=True, max_length=1000)
     created_at = models.DateTimeField(verbose_name='Date created', auto_now_add=True, editable=False)

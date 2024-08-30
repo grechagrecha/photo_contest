@@ -39,7 +39,7 @@
                             <a href="{% url 'post-detail' post.slug %}">
                                 <img alt="{{ post.title }}"
                                      class="card-img rounded-0 img-thumbnail"
-                                     src="{{ post.image.url }}"
+                                     src="{{ post.image_thumbnail.url }}"
                                      style="height: 40vh !important; width: 40vh !important; object-fit: cover !important;"
                                      title="{{ post.description }}"
                                 >

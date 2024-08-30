@@ -34,7 +34,8 @@ ADDITIONAL_APPS = [
     'allauth.socialaccount.providers.vk',
     'crispy_forms',
     'crispy_bootstrap4',
-    'debug_toolbar'
+    'debug_toolbar',
+    'imagekit'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + ADDITIONAL_APPS
