@@ -1,5 +1,3 @@
-import uuid
-
 from django.test import TestCase
 from service_objects.services import ServiceOutcome
 

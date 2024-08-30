@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import AccessMixin
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 
 from apps.users.models import User
 

@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block custom_scripts %}
-<script src="{% static 'users/js/profile.js' %}"></script>
-{% endblock %}
 {% block title %}
 Your posts
 {% endblock %}
@@ -23,10 +20,10 @@ Your posts
                         <div class="card mb-4 product-wap rounded-1">
                             <div class="card rounded-0">
                                 <a href="{% url 'post-detail' post.slug %}">
-                                    <img class="card-img rounded-0 img-thumbnail"
+                                    <img alt="{{ post.title }}"
+                                         class="card-img rounded-0 img-thumbnail"
+                                         src="{{ post.image_thumbnail.url }}"
                                          style="height: 40vh !important; width: 40vh !important; object-fit: cover !important;"
-                                         src="{{ post.image.url }}"
-                                         alt="{{ post.title }}"
                                          title="{{ post.description }}"
                                     >
                                 </a>
@@ -37,8 +34,8 @@ Your posts
                                        href="{% url 'post-detail' post.slug %}">{{ post.title }}</a>
                                     <div class="comment-button">
                                         <form action="{% url 'post-detail' post.slug %}#comment-section">
-                                            <button type="submit"
-                                                    class="btn btn-sm btn-primary justify-content-center me-1">
+                                            <button class="btn btn-sm btn-primary justify-content-center me-1"
+                                                    type="submit">
                                                 <span>{{ post.number_of_comments }}</span>
                                                 <i class="fa fa-comment"></i>
                                             </button>
@@ -47,14 +44,14 @@ Your posts
                                     <form action="{% url 'post-like' post.slug %}" method="POST">
                                         {% csrf_token %}
                                         {% if post.slug in user_likes %}
-                                        <button type="submit" class="btn btn-sm btn-danger justify-content-center">
+                                        <button class="btn btn-sm btn-danger justify-content-center" type="submit">
                                             <span>{{ post.number_of_likes }}</span>
-                                            <i title="Unlike" class="fa fa-thumbs-up "></i>
+                                            <i class="fa fa-thumbs-up " title="Unlike"></i>
                                         </button>
                                         {% else %}
-                                        <button type="submit" class="btn btn-sm btn-primary justify-content-end">
+                                        <button class="btn btn-sm btn-primary justify-content-end" type="submit">
                                             <span>{{ post.number_of_likes }}</span>
-                                            <i title="Like" class="fa fa-thumbs-up "></i>
+                                            <i class="fa fa-thumbs-up " title="Like"></i>
                                         </button>
                                         {% endif %}
                                     </form>
@@ -103,13 +100,13 @@ Your posts
                 {% endif %}
             </div>
             <div class="col-md-2">
-                <form method="GET" action="{% url 'users:your-posts' %}">
-                    <select class="form-select" name="post_state" id="post_state">
+                <form action="{% url 'users:your-posts' %}" method="GET">
+                    <select class="form-select" id="post_state" name="post_state">
                         <option value="published">Published posts</option>
                         <option value="on_validation">Posts on validation</option>
                         <option value="on_deletion">Posts on deletion</option>
                     </select>
-                    <input type="submit" value="Submit" class="btn btn-primary mt-1">
+                    <input class="btn btn-primary mt-1" type="submit" value="Submit">
                 </form>
             </div>
         </div>

@@ -1,9 +1,7 @@
-from django.core.exceptions import MultipleObjectsReturned
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.views import View
-from django.views.generic import UpdateView, TemplateView
+from django.views.generic import UpdateView
 from service_objects.errors import ServiceObjectLogicError
 from service_objects.services import ServiceOutcome
 
@@ -39,14 +37,12 @@ class PostUpdateView(TokenRequiredMixin, UpdateView):
                 request.POST.dict() | {'user': request.user, 'slug': slug},
                 request.FILES.dict()
             )
-            context['result'] = outcome.result
         except ServiceObjectLogicError as error:
             return render(request, self.template_name, context | {'error_message': error}, status=500)
-        # return redirect(self.get_success_url())
-        return redirect(reverse('post-detail', kwargs={'slug': slug, }))
+        return redirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse('home')
+        return reverse('post-detail', kwargs={'slug': self.kwargs['slug']})
 
     def get_initial(self):
         initial = super().get_initial()

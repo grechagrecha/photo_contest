@@ -1,7 +1,6 @@
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.views.generic import DeleteView
 from service_objects.errors import ServiceObjectLogicError
 from service_objects.services import ServiceOutcome
@@ -9,7 +8,6 @@ from service_objects.services import ServiceOutcome
 from apps.users.mixins import TokenRequiredMixin
 from core.models import Comment
 from core.services.comment.delete import CommentDeleteService
-from core.services.comment.get import CommentGetService
 
 
 class CommentDeleteView(TokenRequiredMixin, DeleteView):

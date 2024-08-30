@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('core', '0023_post_number_of_likes_alter_post_description_and_more'),
     ]

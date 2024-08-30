@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.views.generic import ListView, TemplateView, DetailView
+from django.views.generic import ListView, DetailView
 
 from apps.users.models import User
 from core.models import Post, Like
