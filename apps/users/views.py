@@ -77,7 +77,7 @@ class YourPostsView(ListView):
         ).order_by('-created_at')
         requested_state = self.request.GET.get('post_state', None)
 
-        if requested_state:
+        if requested_state in Post.ModerationStates:
             queryset = (
                 queryset.filter(
                     state=requested_state

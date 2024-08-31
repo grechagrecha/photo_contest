@@ -176,4 +176,5 @@ cython_debug/
 
 # Test images
 media/images/posts/test*.*
+media/CACHE/
 dump.rdb
