@@ -3,7 +3,7 @@ from django import forms
 from .models import Post, Comment
 
 
-class PostAddForm(forms.ModelForm):
+class PostCreateForm(forms.ModelForm):
     title = forms.CharField(
         max_length=64,
         widget=forms.TextInput(
@@ -14,6 +14,7 @@ class PostAddForm(forms.ModelForm):
     )
     description = forms.CharField(
         max_length=1000,
+        required=False,
         widget=forms.Textarea(
             attrs={
                 'class': 'form-control'
@@ -48,6 +49,7 @@ class PostUpdateForm(forms.ModelForm):
     )
     description = forms.CharField(
         max_length=1000,
+        required=False,
         widget=forms.Textarea(
             attrs={
                 'class': 'form-control'
@@ -88,7 +90,7 @@ class CommentUpdateForm(forms.ModelForm):
         ]
 
 
-class AddCommentForm(forms.ModelForm):
+class CommentCreateForm(forms.ModelForm):
     text = forms.CharField(
         max_length=300,
         widget=forms.Textarea(

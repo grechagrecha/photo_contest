@@ -10,7 +10,7 @@ from core.models import Post
 
 class PostCreateService(ServiceWithResult):
     title = forms.CharField()
-    description = forms.CharField()
+    description = forms.CharField(required=False)
     image = forms.ImageField()
     user = ModelField(User)
 

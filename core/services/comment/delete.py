@@ -39,5 +39,5 @@ class CommentDeleteService(ServiceWithResult):
         if self.cleaned_data['user'] != self.comment.user:
             self.add_error(
                 'user',
-                ValidationError(message=f'User = {self.cleaned_data['user']} is not authorized to perform this action')
+                ValidationError(message=f'User = {self.cleaned_data["user"]} is not authorized to perform this action')
             )

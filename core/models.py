@@ -1,3 +1,4 @@
+import datetime
 import uuid
 
 from django.db import models
@@ -24,7 +25,7 @@ class Post(models.Model):
         options={'quality': 60}
     )
     slug = models.SlugField(default=uuid.uuid4, editable=False)
-    description = models.CharField(default='Empty description.', blank=True, max_length=1000)
+    description = models.CharField(default='', blank=True, max_length=1000)
     created_at = models.DateTimeField(verbose_name='Date created', auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(verbose_name='Last updated at', auto_now=True, editable=False)
     number_of_likes = models.IntegerField(default=0, editable=False)
@@ -48,7 +49,7 @@ class Post(models.Model):
 
     @transition(field=state, source=ModerationStates.ON_VALIDATION, target=ModerationStates.PUBLISHED)
     def publish(self):
-        pass
+        self.created_at = datetime.datetime.now()
 
     @transition(field=state, source=ModerationStates.PUBLISHED, target=ModerationStates.ON_VALIDATION)
     def retract(self):

@@ -1,1 +1,1 @@
-from .toggle import *
+from .toggle import LikeToggleView

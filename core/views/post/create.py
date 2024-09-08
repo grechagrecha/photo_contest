@@ -6,15 +6,15 @@ from service_objects.errors import Error
 from service_objects.services import ServiceOutcome
 
 from apps.users.mixins import TokenRequiredMixin
-from core.forms import PostAddForm
+from core.forms import PostCreateForm
 from core.models import Post
 from core.services.post.create import PostCreateService
 
 
-class PostAddView(TokenRequiredMixin, CreateView):
+class PostCreateView(TokenRequiredMixin, CreateView):
     model = Post
     template_name = 'core/post-create.html'
-    form_class = PostAddForm
+    form_class = PostCreateForm
     success_url = None
 
     def post(self, request, *args, **kwargs):

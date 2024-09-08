@@ -6,7 +6,7 @@ from service_objects.errors import ServiceObjectLogicError
 from service_objects.services import ServiceOutcome
 
 from apps.users.mixins import TokenRequiredMixin
-from core.forms import AddCommentForm
+from core.forms import CommentCreateForm
 from core.models import Comment
 from core.services.comment.create import CommentCreateService
 
@@ -14,7 +14,7 @@ from core.services.comment.create import CommentCreateService
 class CommentCreateView(TokenRequiredMixin, CreateView):
     model = Comment
     template_name = 'core/comment-create.html'
-    form_class = AddCommentForm
+    form_class = CommentCreateForm
     success_url = None
 
     def post(self, request, *args, **kwargs):
