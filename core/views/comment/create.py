@@ -5,13 +5,12 @@ from django.views.generic import CreateView
 from service_objects.errors import ServiceObjectLogicError
 from service_objects.services import ServiceOutcome
 
-from apps.users.mixins import TokenRequiredMixin
 from core.forms import CommentCreateForm
 from core.models import Comment
 from core.services.comment.create import CommentCreateService
 
 
-class CommentCreateView(TokenRequiredMixin, CreateView):
+class CommentCreateView(CreateView):
     model = Comment
     template_name = 'core/comment-create.html'
     form_class = CommentCreateForm

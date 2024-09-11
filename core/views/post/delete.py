@@ -5,12 +5,11 @@ from django.views.generic import DeleteView
 from service_objects.errors import Error
 from service_objects.services import ServiceOutcome
 
-from apps.users.mixins import TokenRequiredMixin
 from core.models import Post
 from core.services.post.delete import PostDeleteService
 
 
-class PostDeleteView(TokenRequiredMixin, DeleteView):
+class PostDeleteView(DeleteView):
     model = Post
     template_name_suffix = '-confirm-delete'
     success_url = None

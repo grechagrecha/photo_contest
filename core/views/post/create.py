@@ -5,13 +5,12 @@ from django.views.generic import CreateView
 from service_objects.errors import Error
 from service_objects.services import ServiceOutcome
 
-from apps.users.mixins import TokenRequiredMixin
 from core.forms import PostCreateForm
 from core.models import Post
 from core.services.post.create import PostCreateService
 
 
-class PostCreateView(TokenRequiredMixin, CreateView):
+class PostCreateView(CreateView):
     model = Post
     template_name = 'core/post-create.html'
     form_class = PostCreateForm

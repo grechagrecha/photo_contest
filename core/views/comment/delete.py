@@ -5,12 +5,11 @@ from django.views.generic import DeleteView
 from service_objects.errors import ServiceObjectLogicError
 from service_objects.services import ServiceOutcome
 
-from apps.users.mixins import TokenRequiredMixin
 from core.models import Comment
 from core.services.comment.delete import CommentDeleteService
 
 
-class CommentDeleteView(TokenRequiredMixin, DeleteView):
+class CommentDeleteView(DeleteView):
     model = Comment
     template_name_suffix = '-confirm-delete'
     success_url = None

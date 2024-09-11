@@ -5,14 +5,13 @@ from django.views.generic import UpdateView
 from service_objects.errors import ServiceObjectLogicError
 from service_objects.services import ServiceOutcome
 
-from apps.users.mixins import TokenRequiredMixin
 from core.forms import PostUpdateForm
 from core.models import Post
 from core.services.post.get import PostGetService
 from core.services.post.update import PostUpdateService
 
 
-class PostUpdateView(TokenRequiredMixin, UpdateView):
+class PostUpdateView(UpdateView):
     model = Post
     template_name = 'core/post-update.html'
     form_class = PostUpdateForm
