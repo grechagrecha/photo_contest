@@ -62,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(db_index=True, unique=True)
     avatar = models.ImageField(upload_to='images/avatars/', blank=True)
     avatar_thumbnail = ImageSpecField(
-        source='image',
+        source='avatar',
         processors=[ResizeToFill(width=360, height=360, anchor=Anchor.CENTER)],
         format='JPEG',
         options={'quality': 60}
