@@ -19,16 +19,20 @@
         <div class="col-10">
             <div class="row">
                 <div class="col-md-6 pb-5">
-                    <div class="d-flex">
                         <form action="{% url 'home' %}" method="GET">
-                            <select class="form-control" name="ordering">
-                                <option value="most_recent">Most recent</option>
-                                <option value="most_liked">Most liked</option>
-                                <option value="most_commented">Most commented</option>
-                            </select>
-                            <input class="btn btn-primary" type="submit" value="Submit">
+                            <div class="row">
+                                <div class="col">
+                                    <select class="form-control" name="ordering">
+                                        <option value="most_recent">Most recent</option>
+                                        <option value="most_liked">Most liked</option>
+                                        <option value="most_commented">Most commented</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <input class="btn btn-primary" type="submit" value="Submit">
+                                </div>
+                            </div>
                         </form>
-                    </div>
                 </div>
             </div>
             <div class="row">
