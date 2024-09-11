@@ -1,9 +1,12 @@
 import hashlib
 
+from allauth.account.signals import user_signed_up
+from allauth.socialaccount.models import SocialLogin
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.views import LoginView as DjangoLoginView
+from django.dispatch import receiver
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
@@ -96,3 +99,10 @@ class YourPostsView(ListView):
             context['user_likes'] = list(map(lambda like: like.post.slug, likes_qs))
 
         return context
+
+
+@receiver(user_signed_up)
+def populate_profile_from_vk(sociallogin: SocialLogin, user, **kwargs):
+    extra_data: dict = sociallogin.account.extra_data
+    user.username = f'{extra_data.get('first_name')} {extra_data.get('last_name')}'
+    user.save()
