@@ -12,13 +12,16 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('users/', include('apps.users.urls')),
     path('', views.HomeView.as_view(), name='home'),
+
     path('post/<slug:slug>', views.PostDetailView.as_view(), name='post-detail'),
     path('post-create/', views.PostCreateView.as_view(), name='post-create'),
     path('post-delete/<slug:slug>', views.PostDeleteView.as_view(), name='post-delete'),
     path('post-update/<slug:slug>', views.PostUpdateView.as_view(), name='post-update'),
     path('post-recover/<slug:slug>', views.PostRecoverView.as_view(), name='post-recover'),
+    
     path('post-like/<slug:slug>', views.LikeToggleView.as_view(), name='post-like'),
-    path('comment-add/<slug:slug>', views.CommentCreateView.as_view(), name='comment-create'),
+
+    path('comment-create/<slug:slug>', views.CommentCreateView.as_view(), name='comment-create'),
     path('comment-update/<slug:slug>', views.CommentUpdateView.as_view(), name='comment-update'),
     path('comment-delete/<slug:slug>', views.CommentDeleteView.as_view(), name='comment-delete')
 
