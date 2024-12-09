@@ -1,11 +1,16 @@
 from allauth.account.signals import user_signed_up
 from allauth.socialaccount.models import SocialLogin
 from django.dispatch import receiver
-from django.views.generic import ListView, DetailView
+from django.http import HttpResponse
+from django.views.generic import ListView, DetailView, View
 
 from apps.users.models import User
 from core.models import Post, Like
 from core.paginator import SmartPaginator
+
+class LoginView(View):
+    def get(self, request, *args, **kwargs):
+        return HttpResponse('Login')
 
 
 class ProfileView(DetailView):
