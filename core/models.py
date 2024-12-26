@@ -94,5 +94,8 @@ class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     text = models.CharField(max_length=300)
 
+    created_at = models.DateTimeField(verbose_name='Date created', auto_now_add=True, editable=False)
+    updated_at = models.DateTimeField(verbose_name='Last updated at', auto_now=True, editable=False)
+
     def __str__(self):
         return f'id: {self.pk} user: {self.user.username} post: {self.post.title} parent_comment: {self.parent_comment}'
