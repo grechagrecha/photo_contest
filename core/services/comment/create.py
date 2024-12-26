@@ -11,12 +11,16 @@ from core.services.post.get import PostGetService
 
 
 class CommentCreateService(ServiceWithResult):
-    slug = forms.SlugField()
     user = ModelField(User)
+    slug = forms.SlugField()
     text = forms.CharField()
     post = None
 
-    custom_validations = ['_check_if_user_logged_in', '_check_if_text_empty', '_check_post_presence']
+    custom_validations = [
+        '_check_if_user_logged_in',
+        '_check_if_text_empty',
+        '_check_post_presence'
+    ]
 
     def process(self):
         self.post = self._post
@@ -30,32 +34,36 @@ class CommentCreateService(ServiceWithResult):
         return Comment.objects.create(
             post=self.post,
             user=self.cleaned_data['user'],
-            text=self.cleaned_data['text']
+            text=self.cleaned_data['text'],
+            parent_comment=self.cleaned_data['slug']
         )
 
     @property
     @lru_cache()
     def _post(self):
-        outcome = ServiceOutcome(PostGetService, {'slug': self.cleaned_data['slug']})
+        outcome = ServiceOutcome(
+            PostGetService,
+            {'slug': self.cleaned_data['slug']}
+        )
         return outcome.result
 
     def _check_if_user_logged_in(self):
         if not self.cleaned_data['user'].is_authenticated:
             self.add_error(
                 'user',
-                ValidationError(message=f'User is not authenticated')
+                ValidationError(message='User is not authenticated')
             )
 
     def _check_if_text_empty(self):
         if self.cleaned_data['text'].strip() == '':
             self.add_error(
                 'text',
-                ValidationError(message=f'Comment text is empty')
+                ValidationError(message='Comment text is empty')
             )
 
     def _check_post_presence(self):
         if not self.post:
             self.add_error(
                 'post',
-                ValidationError(message=f'Post was not provided')
+                ValidationError(message='Post was not provided')
             )

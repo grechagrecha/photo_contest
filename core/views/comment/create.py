@@ -18,7 +18,7 @@ class CommentCreateView(CreateView):
 
     def post(self, request, *args, **kwargs):
         try:
-            outcome = ServiceOutcome(
+            _ = ServiceOutcome(
                 CommentCreateService,
                 request.POST.dict() | {
                     'slug': self.kwargs['slug'],

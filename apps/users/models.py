@@ -1,6 +1,12 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+    Group
+)
 from django.core import exceptions
 from django.db import models
+from django.templatetags.static import static
 from imagekit.models import ImageSpecField
 from pilkit.processors import ResizeToFill, Anchor
 
@@ -48,7 +54,9 @@ class CustomerManager(UserManager):
         return super().get_queryset().filter(role=self.model.Roles.CUSTOMER)
 
     def create_superuser(self, username, email, password=None):
-        return exceptions.PermissionDenied('To create a superuser use the User model.')
+        return exceptions.PermissionDenied(
+            'To create a superuser use the User model.'
+        )
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -78,6 +86,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f'{self.role}: {self.username}'
+    
+    def get_avatar_url(self):
+        if self.avatar_thumbnail:
+            return self.avatar_thumbnail.url
+        return static('users/404.jpg')
 
 
 class Customer(User):

@@ -18,12 +18,13 @@ urlpatterns = [
     path('post-delete/<slug:slug>', views.PostDeleteView.as_view(), name='post-delete'),
     path('post-update/<slug:slug>', views.PostUpdateView.as_view(), name='post-update'),
     path('post-recover/<slug:slug>', views.PostRecoverView.as_view(), name='post-recover'),
-    
+
     path('post-like/<slug:slug>', views.LikeToggleView.as_view(), name='post-like'),
 
-    path('comment-create/<slug:slug>', views.CommentCreateView.as_view(), name='comment-create'),
-    path('comment-update/<slug:slug>', views.CommentUpdateView.as_view(), name='comment-update'),
-    path('comment-delete/<slug:slug>', views.CommentDeleteView.as_view(), name='comment-delete')
+    path('comment-create/<slug:post_slug>', views.CommentCreateView.as_view(), name='comment-create'),
+    path('comment-update/<slug:comment_slug>', views.CommentUpdateView.as_view(), name='comment-update'),
+    path('comment-delete/<slug:comment_slug>', views.CommentDeleteView.as_view(), name='comment-delete'),
+    path('comment-reply/<slug:comment_slug>', views.CommentReplyView.as_view(), name='comment-reply'),
 
 ]
 

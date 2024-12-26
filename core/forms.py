@@ -104,7 +104,8 @@ class CommentCreateForm(forms.ModelForm):
         model = Comment
         exclude = [
             'user',
-            'post'
+            'post',
+            'parent_comment'
         ]
 
 
