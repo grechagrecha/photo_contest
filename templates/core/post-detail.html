@@ -6,10 +6,10 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container mb-5">
+  <div class="container mb-4">
     <div class="row mb-3">
       <h1 class="display-1 mb-3">{{ post.title }}</h1>
-      <h4 class="text-info"><i class="fa fa-user me-2"></i>{{ post.author.username }}</h4>
+      <h4 class="text-primary"><i class="fa fa-user me-2"></i>{{ post.author.username }}</h4>
     </div>
     <hr />
     <div class="row mb-3">
@@ -20,18 +20,18 @@
     </div>
     <hr />
     <div class="row">
-      <h3>Description:</h3>
+      <h3 class="text-primary">Description:</h3>
       <h6 class="mb-3 text-weight-light">{{ post.description }}</h6>
     </div>
     <hr />
     <div class="row justify-content-between">
       {% if request.user == post.author %}
         <div class="col-md-auto">
-          <button class="btn btn-primary"><a class="text-black text-decoration-none" href="{% url 'post-update' slug=post.slug %}">Update post</a></button>
+          <button class="btn btn-primary"><a class="text-light text-decoration-none" href="{% url 'post-update' slug=post.slug %}"><i class="fa fa-pencil me-1"></i>Update post</a></button>
         </div>
         <div class="col-md-auto">
           {% if post.state != 'on_deletion' %}
-            <button class="btn btn-danger float-end"><a class="text-black text-decoration-none" href="{% url 'post-delete' slug=post.slug %}">Delete post</a></button>
+            <button class="btn btn-danger float-end"><a class="text-light text-decoration-none" href="{% url 'post-delete' slug=post.slug %}"><i class="fa fa-trash me-1"></i>Delete post</a></button>
           {% else %}
             <form action="{% url 'post-recover' post.slug %}" method="post" style="display: inline;">
               {% csrf_token %}
