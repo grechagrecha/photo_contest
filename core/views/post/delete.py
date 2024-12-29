@@ -13,13 +13,20 @@ class PostDeleteView(DeleteView):
     model = Post
     template_name_suffix = '-confirm-delete'
     success_url = None
+    slug_url_kwarg = 'post_slug'
 
     def post(self, request, *args, **kwargs):
         try:
-            outcome = ServiceOutcome(PostDeleteService, request.POST.dict() | kwargs | {'user': request.user})
+            _ = ServiceOutcome(
+                PostDeleteService,
+                request.POST.dict() | {
+                    'user': request.user,
+                    'post_slug': kwargs['post_slug']
+                }
+            )
         except Error as e:
             messages.error(request, f'Something unexpected happened: {e}')
-            return redirect(reverse('post-detail', kwargs={'slug': kwargs.get('slug')}))
+            return redirect(reverse('post-detail', kwargs={'post_slug': kwargs.get('post_slug')}))
         return redirect(self.get_success_url())
 
     def get_success_url(self):

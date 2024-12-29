@@ -2,7 +2,7 @@ from functools import lru_cache
 
 from django import forms
 from django.conf import settings
-from service_objects.errors import NotFound, ValidationError
+from service_objects.errors import ValidationError
 from service_objects.fields import ModelField
 from service_objects.services import ServiceWithResult, ServiceOutcome
 
@@ -13,13 +13,13 @@ from core.services.post.get import PostGetService
 
 class PostUpdateService(ServiceWithResult):
     user = ModelField(User)
-    slug = forms.SlugField()
+    post_slug = forms.SlugField()
     title = forms.CharField()
     description = forms.CharField()
     image = forms.ImageField(required=False)
     post = None
 
-    custom_validations = ['_check_post_presence', '_validate_author', '_validate_type']
+    custom_validations = ['_validate_author', '_validate_type']
 
     def process(self):
         self.post = self._post
@@ -42,14 +42,11 @@ class PostUpdateService(ServiceWithResult):
 
         return self.post
 
-    def _check_post_presence(self):
-        if not self.post:
-            self.add_error(
-                field='slug',
-                error=NotFound(
-                    message=f'Post with slug = {self.cleaned_data["slug"]} does not exist'
-                )
-            )
+    @property
+    @lru_cache()
+    def _post(self):
+        outcome = ServiceOutcome(PostGetService, {'post_slug': self.cleaned_data['post_slug']})
+        return outcome.result
 
     def _validate_author(self):
         if not self.cleaned_data['user']:
@@ -60,7 +57,7 @@ class PostUpdateService(ServiceWithResult):
         if not self.cleaned_data['user'] == self.post.author:
             self.add_error(
                 'user',
-                ValidationError(message='User is not the author')
+                ValidationError(message=f'User: {self.cleaned_data['user']} is not the author')
             )
 
     def _validate_type(self):
@@ -71,9 +68,3 @@ class PostUpdateService(ServiceWithResult):
                     'image',
                     ValidationError(message='Incorrect type of photo')
                 )
-
-    @property
-    @lru_cache()
-    def _post(self):
-        outcome = ServiceOutcome(PostGetService, {'slug': self.cleaned_data['slug']})
-        return outcome.result

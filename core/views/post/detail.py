@@ -12,13 +12,16 @@ from core.services.post.get import PostGetService
 class PostDetailView(DetailView):
     model = Post
     template_name = 'core/post-detail.html'
+    slug_url_kwarg = 'post_slug'
 
     def get(self, request, *args, **kwargs):
         super().get(request, args, kwargs)
         context = self.get_context_data()
         try:
-            outcome = ServiceOutcome(PostGetService, kwargs)
-            context['result'] = outcome.result
+            _ = ServiceOutcome(
+                PostGetService,
+                {'post_slug': kwargs['post_slug']}
+            )
         except Error as error:
             messages.error(request, message=f'{error}')
             return redirect(reverse('home'))
@@ -26,6 +29,9 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['comments'] = Comment.objects.filter(post=self.object)
+        context['comments'] = Comment.objects.filter(
+            post=self.object,
+            parent_comment_id=None
+        )
 
         return context

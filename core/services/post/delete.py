@@ -14,10 +14,12 @@ from core.services.post.get import PostGetService
 
 class PostDeleteService(ServiceWithResult):
     user = ModelField(User)
-    slug = forms.SlugField(required=True)
+    post_slug = forms.SlugField(required=True)
     post = None
 
-    custom_validations = ['_validate_user', ]
+    custom_validations = [
+        '_validate_user',
+    ]
 
     def process(self):
         self.post = self._post
@@ -44,17 +46,19 @@ class PostDeleteService(ServiceWithResult):
     @property
     @lru_cache()
     def _post(self) -> Post:
-        outcome = ServiceOutcome(PostGetService, {'slug': self.cleaned_data['slug']})
+        outcome = ServiceOutcome(PostGetService, {'post_slug': self.cleaned_data['post_slug']})
         return outcome.result
 
     def _validate_user(self):
         if not self.cleaned_data['user']:
             self.add_error(
                 'user',
-                NotFound(message=f'User was not provided to the service')
+                NotFound(message='User was not provided to the service')
             )
         if not self.cleaned_data['user'] == self.post.author:
             self.add_error(
                 'user',
-                ValidationError(message=f'Provided user not authorized to perform this action')
+                ValidationError(
+                    message=f'User {self.cleaned_data['user']} not authorized to perform this action'
+                )
             )

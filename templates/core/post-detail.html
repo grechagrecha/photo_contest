@@ -2,114 +2,46 @@
 {% load static %}
 
 {% block title %}
-{{ post.title }}
-{% endblock title %}
+  {{ post.title }}
+{% endblock %}
 
 {% block content %}
-
-<div class="container mt-5">
-    <div class="col-lg-12">
-        <div class="row mb-5">
-            <h1 class="display-1">{{ post.title }}</h1>
-            <h2 class="display-6"><i class="fa fa-user me-2"></i>{{ post.author.username }}</h2>
-        </div>
-        <div class="row mb-5">
-            <a href="{{ post.image.url }}">
-                <img alt="{{ post.title }}"
-                     class="img-thumbnail"
-                     src="{{ post.image.url }}"
-                     style="height: 40vh !important; width: 40vh !important; object-fit: cover !important;"
-                >
-            </a>
-        </div>
-        <div class="row">
-            <h4 class="mb-3">
-                {{ post.description }}
-            </h4>
-        </div>
+  <div class="container mb-4">
+    <div class="row mb-3">
+      <h1 class="display-1 mb-3">{{ post.title }}</h1>
+      <h4 class="text-primary"><i class="fa fa-user me-2"></i>{{ post.author.username }}</h4>
     </div>
-
-    {% if request.user == post.author %}
-    <div class="col-lg-9 mb-5">
-        <button class="btn btn-primary">
-            <a class="text-black text-decoration-none" href="{% url 'post-update' slug=post.slug %}">Update post</a>
-        </button>
-        {% if post.state != 'on_deletion' %}
-        <button class="btn btn-danger">
-            <a class="text-black text-decoration-none" href="{% url 'post-delete' slug=post.slug %}">Delete post</a>
-        </button>
-        {% else %}
-        <form action="{% url 'post-recover' post.slug %}" method="post" style="display: inline;">
-            {% csrf_token %}
-            <button class="btn btn-success" type="submit">
-                <a class="text-black text-decoration-none">Recover post</a>
-            </button>
-        </form>
-        {% endif %}
+    <hr />
+    <div class="row mb-3">
+      <a href="{{ post.image.url }}"><img alt="{{ post.title }}" class="rounded mx-auto d-block" src="{{ post.image_thumbnail.url }}" style="" /></a>
     </div>
-    {% endif %}
-
-    <div class="comment-section" id="comment-section">
-        <div class="d-flex">
-            <h6 class="display-6 me-auto">Comments</h6>
-            <div class="align-items-end">
-                {% if request.user.is_authenticated %}
-                <button class="btn btn-success mb-5">
-                    <a class="text-decoration-none text-black" href="{% url 'comment-create' slug=post.slug %}">Add
-                        comment</a>
-                </button>
-                {% else %}
-                <h2 class="h2">
-                    You must be <a href="{% url 'account_login' %}">logged in</a> to leave a comment.
-                </h2>
-                {% endif %}
-            </div>
-        </div>
-        {% if comments|length == 0 %}
-        <h6 class="display-6">There are no comments at the time!</h6>
-        {% endif %}
-
-        <div class="col-lg-12">
-            {% for comment in comments %}
-            <div class="container card-body">
-                <div class="row">
-                    <div class="d-flex">
-                        <div class="col-1" id="avatars">
-                            {% if comment.user.avatar.url != None %}
-                            <img alt="{{ comment.user.username }}" class="img-thumbnail rounded-circle me-3"
-                                 src="{{ comment.user.avatar.url }}"
-                                 style="height: 10vh !important; width: 10vh !important; object-fit: cover !important;"
-                                 title="{{ comment.user.username }}"
-                            >
-                            {% else %}
-                            <img alt="{{ comment.user.username }}" class="img-thumbnail rounded-circle me-3"
-                                 src="{% static 'users/404.jpg' %}"
-                                 style="height: 10vh !important; width: 10vh !important; object-fit: cover !important;"
-                                 title="{{ comment.user.username }}"
-                            >
-                            {% endif %}
-                        </div>
-                        <div class="col-10">
-                            <div class="row">
-                                <h6 class="display-6">{{ comment.user.username }}</h6>
-                                <a href="{% url 'comment-update' comment.slug %}"><i class="fa fa-pencil-square-o"></i></a>
-                            </div>
-                            <p class="me-auto">{{ comment.text }}</p>
-                        </div>
-                        {% if comment.user == request.user %}
-                        <div class="col-1">
-                            <a class="text-decoration-none text-black text-end"
-                               href="{% url 'comment-delete' slug=comment.slug %}">
-                                <h5>x</h5>
-                            </a>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+    <div class="row-md-auto display-inline">
+      <p class="ms-1 font-weight-light text-muted">Click on the image to see it in original resolution</p>
     </div>
-</div>
+    <hr />
+    <div class="row">
+      <h3 class="text-primary">Description:</h3>
+      <h6 class="mb-3 text-weight-light">{{ post.description }}</h6>
+    </div>
+    <hr />
+    <div class="row justify-content-between">
+      {% if request.user == post.author %}
+        <div class="col-md-auto">
+          <button class="btn btn-primary"><a class="text-light text-decoration-none" href="{% url 'post-update' post_slug=post.slug %}"><i class="fa fa-pencil me-1"></i>Update post</a></button>
+        </div>
+        <div class="col-md-auto">
+          {% if post.state != 'on_deletion' %}
+            <button class="btn btn-danger float-end"><a class="text-light text-decoration-none" href="{% url 'post-delete' post_slug=post.slug %}"><i class="fa fa-trash me-1"></i>Delete post</a></button>
+          {% else %}
+            <form action="{% url 'post-recover' post_slug=post.slug %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button class="btn btn-success" type="submit"><a class="text-black text-decoration-none">Recover post</a></button>
+            </form>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
 
-{% endblock content %}
+  {% include 'core/comment_section.html' %}
+{% endblock %}

@@ -7,26 +7,22 @@ from service_objects.services import ServiceWithResult, ServiceOutcome
 
 from apps.users.models import User
 from core.models import Comment
-from core.services.post.get import PostGetService
+from core.services.comment.get import CommentGetService
 
 
-class CommentCreateService(ServiceWithResult):
-    """
-        Service for adding new comments on posts.\n
-        Replies on existing comments are created with a CommentReplyService.
-    """
+class CommentReplyService(ServiceWithResult):
     user = ModelField(User)
-    post_slug = forms.SlugField()
+    comment_slug = forms.SlugField()
     text = forms.CharField()
     post = None
 
     custom_validations = [
         '_check_if_user_logged_in',
         '_check_if_text_empty',
-        '_check_post_presence'
     ]
 
     def process(self):
+        self.parent_comment = self._parent_comment
         self.post = self._post
         self.run_custom_validations()
         if self.is_valid():
@@ -37,17 +33,22 @@ class CommentCreateService(ServiceWithResult):
     def _create_comment(self):
         return Comment.objects.create(
             post=self.post,
+            parent_comment=self.parent_comment,
             user=self.cleaned_data['user'],
-            text=self.cleaned_data['text'],
-            parent_comment=None
+            text=self.cleaned_data['text']
         )
 
     @property
     @lru_cache()
     def _post(self):
+        return self.parent_comment.post
+
+    @property
+    @lru_cache()
+    def _parent_comment(self):
         outcome = ServiceOutcome(
-            PostGetService,
-            {'post_slug': self.cleaned_data['post_slug']}
+            CommentGetService,
+            {'comment_slug': self.cleaned_data['comment_slug']}
         )
         return outcome.result
 
@@ -63,11 +64,4 @@ class CommentCreateService(ServiceWithResult):
             self.add_error(
                 'text',
                 ValidationError(message='Comment text is empty')
-            )
-
-    def _check_post_presence(self):
-        if not self.post:
-            self.add_error(
-                'post',
-                ValidationError(message='Post was not provided')
             )

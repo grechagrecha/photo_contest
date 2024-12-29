@@ -1,17 +1,20 @@
 from functools import lru_cache
 
 from django import forms
-from service_objects.errors import NotFound
+from service_objects.errors import ValidationError
 from service_objects.services import ServiceWithResult
 
 from core.models import Comment
 
 
 class CommentGetService(ServiceWithResult):
-    slug = forms.SlugField()
+    comment_slug = forms.SlugField()
     comment = None
 
-    custom_validations = ['_check_comment_presence', ]
+    custom_validations = [
+        '_check_comment_presence',
+        '_check_post_presence',
+    ]
 
     def process(self):
         self.comment = self._comment
@@ -23,11 +26,22 @@ class CommentGetService(ServiceWithResult):
     @property
     @lru_cache()
     def _comment(self) -> Comment:
-        return Comment.objects.get(slug=self.cleaned_data['slug'])
+        return Comment.objects.get(slug=self.cleaned_data['comment_slug'])
+
+    def _check_post_presence(self):
+        if not self.comment.post:
+            self.add_error(
+                'comment.post',
+                ValidationError(
+                    message=f'Comment: {self.comment} doesn\'t have a post associated with it'
+                )
+            )
 
     def _check_comment_presence(self):
         if not self.comment:
             self.add_error(
                 'slug',
-                NotFound(message=f'Comment with slug = {self.cleaned_data["slug"]} was not found')
+                ValidationError(
+                    message=f'Comment: {self.comment} was not found'
+                )
             )

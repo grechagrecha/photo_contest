@@ -12,7 +12,7 @@ from core.services.post.get import PostGetService
 
 
 class PostRecoverService(ServiceWithResult):
-    slug = forms.SlugField()
+    post_slug = forms.SlugField()
     user = ModelField(User)
     post = None
 
@@ -34,19 +34,22 @@ class PostRecoverService(ServiceWithResult):
     @property
     @lru_cache()
     def _post(self) -> Post:
-        outcome = ServiceOutcome(PostGetService, {'slug': self.cleaned_data['slug']})
+        outcome = ServiceOutcome(
+            PostGetService,
+            {'post_slug': self.cleaned_data['post_slug']}
+        )
         return outcome.result
 
     def _validate_author(self):
         if self.post.author != self.cleaned_data['user']:
             self.add_error(
                 'user',
-                ValidationError(message=f'You are not authorized to perform this action')
+                ValidationError(message=f'User: {self.cleaned_data['user']} authorized to perform this action')
             )
 
     def _check_if_post_on_deletion(self):
         if self.post.state != Post.ModerationStates.ON_DELETION:
             self.add_error(
                 'state',
-                ValidationError(message=f'Post {self.post} is not on deletion')
+                ValidationError(message=f'Post: {self.post} is not on deletion')
             )

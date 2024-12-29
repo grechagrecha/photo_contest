@@ -1,0 +1,52 @@
+{% load static %}
+
+<div class="container">
+  <div class="row d-flex justify-content-center">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body p-3">
+          <div class="row justify-content-between align-items-center my-1">
+            <div class="col">
+              <div class="row justify-content-start">
+                <div class="col-md-auto float-start">
+                  <h4 class="d-inline text-muted">{{ post.number_of_comments }} Comments</h4>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <button class="btn btn-success float-end"><a class="ms-auto text-decoration-none text-light" href="{% url 'comment-create' post_slug=post.slug %}">Add comment</a></button>
+            </div>
+          </div>
+          <hr />
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                {% for comment in comments %}
+                  <div class="container">
+                    <div class="row">
+                      {% include 'core/comment.html' with comment=comment %}
+                      {% for reply in comment.replies.all %}
+                        <div class="container">
+                          <div class="row ms-2">
+                            {% include 'core/comment.html' with comment=reply %}
+                            {% for second_reply in reply.replies.all %}
+                              <div class="container">
+                                <div class="row ms-4">
+                                  {% include 'core/comment.html' with comment=second_reply %}
+                                </div>
+                              </div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

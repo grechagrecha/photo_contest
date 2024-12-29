@@ -1,7 +1,6 @@
 from functools import lru_cache
 
 from django import forms
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from service_objects.errors import NotFound
 from service_objects.services import ServiceWithResult
 
@@ -12,10 +11,12 @@ class PostGetService(ServiceWithResult):
     """
         Returns a post with a given slug if it exists.
     """
-    slug = forms.SlugField()
+    post_slug = forms.SlugField()
     post = None
 
-    custom_validations = ['_check_post_presence', ]
+    custom_validations = [
+        '_check_post_presence',
+    ]
 
     def process(self):
         self.post = self._post
@@ -27,16 +28,13 @@ class PostGetService(ServiceWithResult):
     @property
     @lru_cache()
     def _post(self) -> Post | None:
-        try:
-            return Post.objects.get(slug=self.cleaned_data['slug'])
-        except (ObjectDoesNotExist, MultipleObjectsReturned):
-            return None
+        return Post.objects.get(slug=self.cleaned_data['post_slug'])
 
     def _check_post_presence(self):
         if not self.post:
             self.add_error(
-                'slug',
+                'post_slug',
                 NotFound(
-                    message=f'Post with slug = {self.cleaned_data["slug"]} does not exist'
+                    message=f'Post with slug = {self.cleaned_data["post_slug"]} does not exist.'
                 )
             )

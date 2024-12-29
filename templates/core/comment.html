@@ -1,0 +1,38 @@
+<!-- Template for an individual comment (or a reply) -->
+
+<div class="card m-1">
+  <div class="row card-body">
+    <div class="col-auto">
+      <img class="card-img-start" src="{{ comment.user.get_avatar_url }}" alt="avatar" width="70" height="70" />
+    </div>
+    <div class="col">
+      <div class="row my-1">
+        <div class="col">
+          <h5>{{ comment.user.username }}</h5>
+        </div>
+        {% if request.user == comment.user %}
+          <div class="col-auto float-end pe-1">
+            <a class="text-decoration-none text-primary" href="{% url 'comment-update' comment_slug=comment.slug %}"><i class="fa fa-pencil"></i></a>
+          </div>
+          <div class="col-auto float-end px-3">
+            <a class="text-decoration-none text-danger" href="{% url 'comment-delete' comment_slug=comment.slug %}"><i class="fa fa-trash"></i></a>
+          </div>
+        {% endif %}
+      </div>
+      <hr />
+      <div class="row">
+        <p class="text font-weight-light">{{ comment.text }}</p>
+      </div>
+      <div class="row">
+        <div class="col">
+          <span class="small text-muted">{{ comment.created_at|timesince }} ago</span>
+        </div>
+        <div class="col-auto float-end px-3">
+          {% if not comment.parent_comment.parent_comment %}
+            <a class="text-decoration-none text-muted" href="{% url 'comment-reply' comment_slug=comment.slug %}"><i class="fa fa-reply"></i></a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

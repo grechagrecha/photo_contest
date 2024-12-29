@@ -13,19 +13,25 @@ class CommentDeleteView(DeleteView):
     model = Comment
     template_name_suffix = '-confirm-delete'
     success_url = None
+    slug_url_kwarg = 'comment_slug'
 
     def get(self, request, *args, **kwargs):
-        print(kwargs)
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         try:
-            outcome = ServiceOutcome(CommentDeleteService, request.POST.dict() | kwargs | {'user': request.user})
-            self.kwargs['post_slug'] = outcome.result
-            return redirect(self.get_success_url())
+            outcome = ServiceOutcome(
+                CommentDeleteService,
+                request.POST.dict() | {
+                    'user': request.user,
+                    'comment_slug': kwargs['comment_slug']
+                })
+            
+            post_slug = outcome.result.slug
+            return redirect(self.get_success_url(post_slug))
         except ServiceObjectLogicError as e:
-            messages.error(request, message=f'{e}')
-            return redirect(self.get_success_url())
+            messages.error(request, message=f'{e.errors_dict}')
+            return redirect(reverse('home'))
 
-    def get_success_url(self):
-        return reverse('post-detail', kwargs={'slug': self.kwargs['post_slug']})
+    def get_success_url(self, post_slug):
+        return reverse('post-detail', kwargs={'post_slug': post_slug})
