@@ -27,13 +27,13 @@
     <div class="row justify-content-between">
       {% if request.user == post.author %}
         <div class="col-md-auto">
-          <button class="btn btn-primary"><a class="text-light text-decoration-none" href="{% url 'post-update' slug=post.slug %}"><i class="fa fa-pencil me-1"></i>Update post</a></button>
+          <button class="btn btn-primary"><a class="text-light text-decoration-none" href="{% url 'post-update' post_slug=post.slug %}"><i class="fa fa-pencil me-1"></i>Update post</a></button>
         </div>
         <div class="col-md-auto">
           {% if post.state != 'on_deletion' %}
-            <button class="btn btn-danger float-end"><a class="text-light text-decoration-none" href="{% url 'post-delete' slug=post.slug %}"><i class="fa fa-trash me-1"></i>Delete post</a></button>
+            <button class="btn btn-danger float-end"><a class="text-light text-decoration-none" href="{% url 'post-delete' post_slug=post.slug %}"><i class="fa fa-trash me-1"></i>Delete post</a></button>
           {% else %}
-            <form action="{% url 'post-recover' post.slug %}" method="post" style="display: inline;">
+            <form action="{% url 'post-recover' post_slug=post.slug %}" method="post" style="display: inline;">
               {% csrf_token %}
               <button class="btn btn-success" type="submit"><a class="text-black text-decoration-none">Recover post</a></button>
             </form>

@@ -16,6 +16,7 @@ class PostUpdateView(UpdateView):
     template_name = 'core/post-update.html'
     form_class = PostUpdateForm
     success_url = None
+    slug_url_kwarg = 'post_slug'
 
     def get(self, *args, **kwargs):
         outcome = ServiceOutcome(PostGetService, kwargs)
@@ -28,12 +29,12 @@ class PostUpdateView(UpdateView):
 
     def post(self, request, *args, **kwargs):
         super().post(request, *args, **kwargs)
-        slug = kwargs.get('slug')
+        post_slug = kwargs['post_slug']
         context = self.get_context_data()
         try:
-            outcome = ServiceOutcome(
+            _ = ServiceOutcome(
                 PostUpdateService,
-                request.POST.dict() | {'user': request.user, 'slug': slug},
+                request.POST.dict() | {'user': request.user, 'post_slug': post_slug},
                 request.FILES.dict()
             )
         except ServiceObjectLogicError as error:
@@ -41,7 +42,7 @@ class PostUpdateView(UpdateView):
         return redirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse('post-detail', kwargs={'slug': self.kwargs['slug']})
+        return reverse('post-detail', kwargs={'post_slug': self.kwargs['post_slug']})
 
     def get_initial(self):
         initial = super().get_initial()

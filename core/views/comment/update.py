@@ -13,16 +13,23 @@ class CommentUpdateView(UpdateView):
     template_name = 'core/comment-update.html'
     form_class = CommentUpdateForm
     success_url = None
+    slug_url_kwarg = 'comment_slug'
 
     def post(self, request, *args, **kwargs):
         outcome = ServiceOutcome(
             CommentUpdateService,
-            request.POST.dict() | {'slug': kwargs['slug'], 'user': request.user}
+            request.POST.dict() | {
+                'comment_slug': kwargs['comment_slug'],
+                'user': request.user
+            }
         )
-        return redirect(self.get_success_url(outcome.result.post.slug))
+
+        updated_comment = outcome.result
+
+        return redirect(self.get_success_url(updated_comment.post.slug))
 
     def get_success_url(self, post_slug):
-        return reverse('post-detail', kwargs={'slug': post_slug})
+        return reverse('post-detail', kwargs={'post_slug': post_slug})
 
     def get_initial(self):
         initial = super().get_initial()

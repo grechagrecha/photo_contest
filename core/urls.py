@@ -13,11 +13,11 @@ urlpatterns = [
     path('users/', include('apps.users.urls')),
     path('', views.HomeView.as_view(), name='home'),
 
-    path('post/<slug:slug>', views.PostDetailView.as_view(), name='post-detail'),
+    path('post/<slug:post_slug>', views.PostDetailView.as_view(), name='post-detail'),
     path('post-create/', views.PostCreateView.as_view(), name='post-create'),
-    path('post-delete/<slug:slug>', views.PostDeleteView.as_view(), name='post-delete'),
-    path('post-update/<slug:slug>', views.PostUpdateView.as_view(), name='post-update'),
-    path('post-recover/<slug:slug>', views.PostRecoverView.as_view(), name='post-recover'),
+    path('post-delete/<slug:post_slug>', views.PostDeleteView.as_view(), name='post-delete'),
+    path('post-update/<slug:post_slug>', views.PostUpdateView.as_view(), name='post-update'),
+    path('post-recover/<slug:post_slug>', views.PostRecoverView.as_view(), name='post-recover'),
 
     path('post-like/<slug:slug>', views.LikeToggleView.as_view(), name='post-like'),
 

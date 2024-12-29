@@ -11,8 +11,12 @@ from core.services.post.get import PostGetService
 
 
 class CommentCreateService(ServiceWithResult):
+    """
+        Service for adding new comments on posts.\n
+        Replies on existing comments are created with a CommentReplyService.
+    """
     user = ModelField(User)
-    slug = forms.SlugField()
+    post_slug = forms.SlugField()
     text = forms.CharField()
     post = None
 
@@ -35,7 +39,7 @@ class CommentCreateService(ServiceWithResult):
             post=self.post,
             user=self.cleaned_data['user'],
             text=self.cleaned_data['text'],
-            parent_comment=self.cleaned_data['slug']
+            parent_comment=None
         )
 
     @property
@@ -43,7 +47,7 @@ class CommentCreateService(ServiceWithResult):
     def _post(self):
         outcome = ServiceOutcome(
             PostGetService,
-            {'slug': self.cleaned_data['slug']}
+            {'post_slug': self.cleaned_data['post_slug']}
         )
         return outcome.result
 

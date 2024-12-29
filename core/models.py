@@ -20,6 +20,7 @@ class Post(models.Model):
     title = models.CharField(default='post', max_length=64)
     description = models.CharField(default='', blank=True, max_length=1000)
     slug = models.SlugField(default=uuid.uuid4, editable=False)
+
     image = models.ImageField(upload_to='images/posts/')
     image_thumbnail = ImageSpecField(
         source='image',
@@ -27,13 +28,16 @@ class Post(models.Model):
         format='JPEG',
         options={'quality': 60}
     )
+    image_previous = models.ImageField(upload_to='images/posts/prev/')
+
     created_at = models.DateTimeField(verbose_name='Date created', auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(verbose_name='Last updated at', auto_now=True, editable=False)
+
     number_of_likes = models.IntegerField(default=0, editable=False)
     number_of_comments = models.IntegerField(default=0, editable=False)
 
     state = FSMField(default=ModerationStates.ON_VALIDATION, choices=ModerationStates.choices)
-    task_id = models.CharField(null=True, editable=False)
+    task_id = models.CharField(null=True, editable=False)  # Celery task id needed for post recovery
 
     def __str__(self):
         return f'{self.title} by {self.author}'
@@ -53,10 +57,13 @@ class Post(models.Model):
 
     @transition(field=state, source=ModerationStates.ON_DELETION, target=ModerationStates.ON_VALIDATION)
     def recover(self):
-        pass
+        self.updated_at = datetime.datetime.now()
 
-    @transition(field=state, source=(ModerationStates.PUBLISHED, ModerationStates.ON_VALIDATION),
-                target=ModerationStates.ON_DELETION)
+    @transition(
+        field=state,
+        source=(ModerationStates.PUBLISHED, ModerationStates.ON_VALIDATION),
+        target=ModerationStates.ON_DELETION
+    )
     def remove(self):
         pass
 

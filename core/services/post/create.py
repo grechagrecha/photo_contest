@@ -14,7 +14,10 @@ class PostCreateService(ServiceWithResult):
     image = forms.ImageField()
     user = ModelField(User)
 
-    custom_validations = ['_validate_name', '_validate_type']
+    custom_validations = [
+        '_validate_name',
+        '_validate_type'
+    ]
 
     def process(self):
         self.run_custom_validations()

@@ -15,13 +15,14 @@ class CommentCreateView(CreateView):
     template_name = 'core/comment-create.html'
     form_class = CommentCreateForm
     success_url = None
+    slug_url_kwarg = 'post_slug'
 
     def post(self, request, *args, **kwargs):
         try:
             _ = ServiceOutcome(
                 CommentCreateService,
                 request.POST.dict() | {
-                    'slug': self.kwargs['slug'],
+                    'post_slug': self.kwargs['post_slug'],
                     'user': request.user
                 }
             )
@@ -31,8 +32,8 @@ class CommentCreateView(CreateView):
             return redirect(reverse('comment-create'))
 
     def get_success_url(self):
-        slug = self.kwargs.get('slug')
-        return reverse_lazy('post-detail', kwargs={'slug': slug})
+        slug = self.kwargs.get('post_slug')
+        return reverse_lazy('post-detail', kwargs={'post_slug': slug})
 
     def form_valid(self, form):
         return redirect(self.get_success_url())

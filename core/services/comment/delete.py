@@ -6,16 +6,19 @@ from service_objects.fields import ModelField
 from service_objects.services import ServiceWithResult, ServiceOutcome
 
 from apps.users.models import User
-from core.models import Comment
+from core.models import Comment, Post
 from core.services.comment.get import CommentGetService
 
 
 class CommentDeleteService(ServiceWithResult):
-    slug = forms.SlugField()
+    comment_slug = forms.SlugField()
     user = ModelField(User)
     comment = None
 
-    custom_validations = ['_check_if_user_is_authorized', ]
+    custom_validations = [
+        '_check_if_user_is_authorized',
+        '_check_if_comment_has_replies'
+    ]
 
     def process(self):
         self.comment = self._comment
@@ -24,15 +27,15 @@ class CommentDeleteService(ServiceWithResult):
             self.result = self._delete_comment()
         return self
 
-    def _delete_comment(self):
-        post_slug = self.comment.post.slug
+    def _delete_comment(self) -> Post:
+        post = self.comment.post
         self.comment.delete()
-        return post_slug
+        return post
 
     @property
     @lru_cache()
     def _comment(self) -> Comment:
-        outcome = ServiceOutcome(CommentGetService, {'slug': self.cleaned_data['slug']})
+        outcome = ServiceOutcome(CommentGetService, {'comment_slug': self.cleaned_data['comment_slug']})
         return outcome.result
 
     def _check_if_user_is_authorized(self):
@@ -40,4 +43,13 @@ class CommentDeleteService(ServiceWithResult):
             self.add_error(
                 'user',
                 ValidationError(message=f'User = {self.cleaned_data["user"]} is not authorized to perform this action')
+            )
+
+    def _check_if_comment_has_replies(self):
+        if self.comment.replies.all():
+            self.add_error(
+                'comment',
+                ValidationError(
+                    message=f'Comment {self.cleaned_data["comment_slug"]} has replies and cannot be deleted'
+                )
             )

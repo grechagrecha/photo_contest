@@ -19,7 +19,6 @@ class CommentReplyService(ServiceWithResult):
     custom_validations = [
         '_check_if_user_logged_in',
         '_check_if_text_empty',
-        '_check_post_presence'
     ]
 
     def process(self):
@@ -42,7 +41,7 @@ class CommentReplyService(ServiceWithResult):
     @property
     @lru_cache()
     def _post(self):
-        return self._parent_comment.post
+        return self.parent_comment.post
 
     @property
     @lru_cache()
@@ -65,11 +64,4 @@ class CommentReplyService(ServiceWithResult):
             self.add_error(
                 'text',
                 ValidationError(message='Comment text is empty')
-            )
-
-    def _check_post_presence(self):
-        if not self.post:
-            self.add_error(
-                'post',
-                ValidationError(message='Post was not provided')
             )
