@@ -1,40 +1,18 @@
 <!-- Template for an individual comment (or a reply) -->
 
-{% comment %}
-<div class="card d-flex flex-start mb-2">
-  <img class="rounded-circle shadow-1-strong me-3" src="{{ comment.user.get_avatar_url }}" alt="avatar" width="65" height="65" />
-  <div class="flex-grow-1">
-    <div>
-      <div class="d-flex justify-content-between align-items-center">
-        <p class="mb-1">
-          {{ comment.user.username }}
-          <span class="small">{{ comment.created_at|timesince }} ago</span>
-        </p>
-        <!-- TODO: Maybe add 'nestedness value' to a Comment model for a cleaner solution -->
-        {% if not comment.parent_comment.parent_comment %}
-          <a class="text-decoration-none text-primary" href="{% url 'comment-reply' comment_slug=comment.slug %}"><i class="fa fa-reply me-1"></i><span class="small">Reply</span></a>
-        {% endif %}
-      </div>
-      <p class="small">{{ comment.text }}</p>
-    </div>
-  </div>
-</div>
-{% endcomment %}
-
 <div class="card m-1">
   <div class="row card-body">
     <div class="col-auto">
-      <img class="img-thumbnail" src="{{ comment.user.get_avatar_url }}" alt="avatar" width="80" height="80" />
+      <img class="card-img-start" src="{{ comment.user.get_avatar_url }}" alt="avatar" width="70" height="70" />
     </div>
     <div class="col">
-      <div class="row my-2">
+      <div class="row my-1">
         <div class="col">
-          <h6>{{ comment.user.username }}</h6>
+          <h5>{{ comment.user.username }}</h5>
         </div>
         {% if request.user == comment.user %}
           <div class="col-auto float-end pe-1">
             <a class="text-decoration-none text-primary" href="{% url 'comment-update' comment_slug=comment.slug %}"><i class="fa fa-pencil"></i></a>
-            <!-- TODO: Redo comment update and delete views and services to accept comment.slug instead post.slug -->
           </div>
           <div class="col-auto float-end px-3">
             <a class="text-decoration-none text-danger" href="{% url 'comment-delete' comment_slug=comment.slug %}"><i class="fa fa-trash"></i></a>
@@ -50,7 +28,9 @@
           <span class="small text-muted">{{ comment.created_at|timesince }} ago</span>
         </div>
         <div class="col-auto float-end px-3">
-          <a class="text-decoration-none text-muted" href="{% url 'comment-reply' comment_slug=comment.slug %}"><i class="fa fa-reply"></i></a>
+          {% if not comment.parent_comment.parent_comment %}
+            <a class="text-decoration-none text-muted" href="{% url 'comment-reply' comment_slug=comment.slug %}"><i class="fa fa-reply"></i></a>
+          {% endif %}
         </div>
       </div>
     </div>

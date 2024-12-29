@@ -48,7 +48,7 @@ class CommentReplyService(ServiceWithResult):
     def _parent_comment(self):
         outcome = ServiceOutcome(
             CommentGetService,
-            {'slug': self.cleaned_data['comment_slug']}
+            {'comment_slug': self.cleaned_data['comment_slug']}
         )
         return outcome.result
 

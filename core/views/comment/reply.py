@@ -24,7 +24,7 @@ class CommentReplyView(CreateView):
                 CommentReplyService,
                 request.POST.dict() | {
                     'user': request.user,
-                    'comment_slug': kwargs.get('comment_slug')
+                    'comment_slug': kwargs['comment_slug']
                 }
             )
             return redirect(self.get_success_url())

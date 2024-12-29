@@ -18,26 +18,31 @@
             </div>
           </div>
           <hr />
-          <div class="row">
-            <div class="col">
-              {% for comment in comments %}
-                <div>
-                  <!-- Comment start -->
-                  {% include 'core/comment.html' with comment=comment %}
-                  {% for reply in comment.replies.all %}
-                    <div class="ms-5">
-                      <!-- First reply start -->
-                      {% include 'core/comment.html' with comment=reply %}
-                      {% for second_reply in reply.replies.all %}
-                        <div class="ms-5">
-                          <!-- Second reply start -->
-                          {% include 'core/comment.html' with comment=second_reply %}
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                {% for comment in comments %}
+                  <div class="container">
+                    <div class="row">
+                      {% include 'core/comment.html' with comment=comment %}
+                      {% for reply in comment.replies.all %}
+                        <div class="container">
+                          <div class="row ms-2">
+                            {% include 'core/comment.html' with comment=reply %}
+                            {% for second_reply in reply.replies.all %}
+                              <div class="container">
+                                <div class="row ms-4">
+                                  {% include 'core/comment.html' with comment=second_reply %}
+                                </div>
+                              </div>
+                            {% endfor %}
+                          </div>
                         </div>
                       {% endfor %}
                     </div>
-                  {% endfor %}
-                </div>
-              {% endfor %}
+                  </div>
+                {% endfor %}
+              </div>
             </div>
           </div>
         </div>
