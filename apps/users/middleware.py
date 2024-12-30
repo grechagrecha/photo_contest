@@ -22,4 +22,3 @@ class RestrictAccessToAdminMiddleware:
             if request.user.is_authenticated:
                 if not request.user.is_staff:
                     raise Http404
-                

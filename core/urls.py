@@ -18,6 +18,8 @@ urlpatterns = [
     path('post-delete/<slug:post_slug>', views.PostDeleteView.as_view(), name='post-delete'),
     path('post-update/<slug:post_slug>', views.PostUpdateView.as_view(), name='post-update'),
     path('post-recover/<slug:post_slug>', views.PostRecoverView.as_view(), name='post-recover'),
+    
+    path('ajax-search/', views.PostSearchAjaxView.as_view(), name='ajax-search'),
 
     path('post-like/<slug:slug>', views.LikeToggleView.as_view(), name='post-like'),
 
