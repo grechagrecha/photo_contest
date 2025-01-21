@@ -177,3 +177,4 @@ cython_debug/
 media/
 dump.rdb
 TODO
+static/core/js/jsconfig.json
