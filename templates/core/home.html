@@ -1,103 +1,58 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block custom_scripts %}
+<script src="{% static 'core/js/search.js' %}"></script>
+{% endblock %}
 
 {% block title %}
-  Home
+Home
 {% endblock %}
 
 {% block content %}
-  {% load crispy_forms_tags %}
-  {% load core_tags %}
+{% load crispy_forms_tags %}
+{% load core_tags %}
 
-  <script>
-    const delay_by_in_ms = 200
-    const endpoint = "{% url 'ajax-search' %}"
-    let scheduled_function = false
-    
-    let ajax_request = function (endpoint, request_parameters) {
-      $.getJSON(endpoint, request_parameters).done((response) => {
-        console.log(response)
-      })
-    }
-    
-    document.addEventListener('DOMContentLoaded', (event) => {
-      const search_input = $('#search-input')
-    
-      search_input.on('keyup', function () {
-        request_parameters = {
-          search_query: $(this).val()
-        }
-    
-        if (scheduled_function) {
-          clearTimeout(scheduled_function)
-        }
-    
-        scheduled_function = setTimeout(ajax_request, delay_by_in_ms, endpoint, request_parameters)
-      })
-    })
-  </script>
-
-  <div class="container py-5 mx-auto">
-    <div class="row">
-      <div class="col">
-        <div class="row mb-3 align-tems-center">
-          <div class="col">
-            <input class="form-control" id="search-input" placeholder="Search" />
-          </div>
-          <div class="col">
-            <h6>Sorting placeholder</h6>
-          </div>
-          {% comment %}
-          <div class="col-md-6 pb-5">
-            <form action="{% url 'home' %}" method="GET">
-              <div class="row">
-                <div class="col">
-                  <select class="form-control" name="ordering">
-                    <option value="most_recent">Most recent</option>
-                    <option value="most_liked">Most liked</option>
-                    <option value="most_commented">Most commented</option>
-                  </select>
-                </div>
-                <div class="col">
-                  <input class="btn btn-primary" type="submit" value="Submit" />
-                </div>
-              </div>
-            </form>
-          </div>
-          {% endcomment %}
-        </div>
-        <!-- Post section -->
-        <div class="row">
-          {% for post in object_list %}
-            {% include "core/post.html" with post=post %}
-          {% endfor %}
-        </div>
-        <!-- End of post section -->
-        {% if is_paginated %}
+<div class="container py-5 mx-auto">
+  <div class="row">
+    <div class="col">
+      <div class="row mb-5">
+        <div class="col">
           <div class="row">
-            <ul class="pagination justify-content-end">
-              {% if page_obj.has_previous %}
-                <li class="page-item">
-                  <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="?{{ paginator.first_page_params }}">&laquo; First</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="?{{ page_obj.previous_page_params }}">Previous</a>
-                </li>
-              {% endif %}
-              <li class="page-item">
-                <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a>
-              </li>
-              {% if page_obj.has_next %}
-                <li class="page-item">
-                  <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="?{{ page_obj.next_page_params }}" rel="next">Next</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="?{{ paginator.last_page_params }}">Last &raquo;</a>
-                </li>
-              {% endif %}
-            </ul>
+            <input type="hidden" id="ajax-search" data-url="{% url 'ajax-search' %}" />
+            <div class="col-auto align-self-center">
+              <i class="fa fa-search search-icon"></i>
+            </div>
+            <div class="col">
+              <input class="form-control" id="search-input" placeholder="Search" />
+            </div>
           </div>
-        {% endif %}
+        </div>
+        <div class="col">
+          <div class="row">
+            <!-- <input type="hidden" id="ajax-search" data-url="ajax-sort" /> -->
+            <div class="col-auto align-self-center">
+              <i class="fa fa-sort-alpha-asc"></i>
+            </div>
+            <div class="col">
+              <select class="form-control" id="ajax-sort" data-url="">
+                <option value="recent">Most recent</option>
+                <option value="liked">Most liked</option>
+                <option value="commented">Most commented</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
+      <!-- Post section -->
+      <div class="row justify-content-between" id="post-section" data-url="{% static 'core/html/post.html' %}"></div>
+      <!-- End of post section -->
+      {% if is_paginated %}
+      <div class="row">
+        {% include 'core/pagination.html' with page_obj=page_obj %}
+      </div>
+      {% endif %}
     </div>
   </div>
+</div>
 {% endblock %}
