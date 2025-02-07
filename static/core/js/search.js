@@ -34,7 +34,7 @@ let populatePage = function (response) {
     post_section
       .append(parseAndFillTemplate(post, post_template))
       .hide()
-      .fadeIn(200);
+      .fadeIn(350);
   });
 };
 
@@ -42,16 +42,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const search_input = $("#search-input");
   const sort_input = $("#ajax-sort");
   const search_endpoint = $("#ajax-search").attr("data-url");
-  const delay_in_ms = 700;
+  const delay_in_ms = 400;
 
   let scheduled_function = false;
-
-  // TODO: Make search and sort input values save and load from cookies on page reload
 
   search_input.val(localStorage.getItem("search_input_val"));
   sort_input.val(localStorage.getItem("sort_input_val"));
 
-  sendAjaxRequest(search_endpoint, "");
+  sendAjaxRequest(search_endpoint, { search_query: search_input.val() });
 
   search_input.on("keyup", function (key) {
     localStorage.setItem("search_input_val", search_input.val());
