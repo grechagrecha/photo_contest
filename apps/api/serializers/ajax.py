@@ -15,7 +15,8 @@ class AjaxSearchJsonSerializer(serializers.ModelSerializer):
             'created_at',
             'author_name',
             'post_url',
-            'image_thumbnail_url'
+            'image_thumbnail_url',
+            
         ]
     author_name = serializers.CharField(source='get_author_name')
     post_url = serializers.URLField(source='get_absolute_url')

@@ -39,6 +39,8 @@ let populatePage = function (response) {
 };
 
 document.addEventListener("DOMContentLoaded", (event) => {
+  const url_params = new URLSearchParams(window.location.search);
+  const current_page = url_params.get("page");
   const search_input = $("#search-input");
   const sort_input = $("#ajax-sort");
   const search_endpoint = $("#ajax-search").attr("data-url");
@@ -49,13 +51,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
   search_input.val(localStorage.getItem("search_input_val"));
   sort_input.val(localStorage.getItem("sort_input_val"));
 
-  sendAjaxRequest(search_endpoint, { search_query: search_input.val() });
+  sendAjaxRequest(search_endpoint, {
+    search_query: search_input.val(),
+    page: current_page,
+  });
 
   search_input.on("keyup", function (key) {
     localStorage.setItem("search_input_val", search_input.val());
 
     request_parameters = {
       search_query: $(this).val().trim(),
+      page: current_page,
     };
 
     if (scheduled_function) {
