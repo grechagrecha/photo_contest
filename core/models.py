@@ -2,6 +2,7 @@ import datetime
 import uuid
 
 from django.db import models
+from django.urls import reverse
 from django_fsm import FSMField, transition
 from django.conf import settings
 from imagekit.models import ImageSpecField
@@ -20,7 +21,6 @@ class Post(models.Model):
     title = models.CharField(default='post', max_length=64)
     description = models.CharField(default='', blank=True, max_length=1000)
     slug = models.SlugField(default=uuid.uuid4, editable=False)
-
     image = models.ImageField(upload_to='images/posts/')
     image_thumbnail = ImageSpecField(
         source='image',
@@ -41,6 +41,15 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.title} by {self.author}'
+
+    def get_absolute_url(self):
+        return reverse('post-detail', kwargs={'post_slug': self.slug})
+
+    def get_author_name(self):
+        return self.author.username
+
+    def get_image_thumbnail_url(self):
+        return self.image_thumbnail.url
 
     def save(self, *args, **kwargs):
         self.number_of_likes = Like.objects.filter(post_id=self.pk).count()

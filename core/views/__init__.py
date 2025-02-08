@@ -13,3 +13,4 @@ from .comment import (
     CommentDeleteView,
     CommentReplyView
 )
+from .ajax import PostSearchAjaxView

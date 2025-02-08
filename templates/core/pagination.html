@@ -1,0 +1,21 @@
+<ul class="pagination justify-content-end">
+  {% if page_obj.has_previous %}
+    <li class="page-item">
+      <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="?{{ paginator.first_page_params }}">&laquo; First</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="?{{ page_obj.previous_page_params }}">Previous</a>
+    </li>
+  {% endif %}
+  <li class="page-item">
+    <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a>
+  </li>
+  {% if page_obj.has_next %}
+    <li class="page-item">
+      <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="?{{ page_obj.next_page_params }}" rel="next">Next</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="?{{ paginator.last_page_params }}">Last &raquo;</a>
+    </li>
+  {% endif %}
+</ul>
