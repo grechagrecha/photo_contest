@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   sendAjaxRequest(search_endpoint, {
     search_query: search_input.val(),
+    sort_order: sort_input.val(),
     page: current_page,
   });
 
@@ -61,6 +62,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     request_parameters = {
       search_query: $(this).val().trim(),
+      sort_order: sort_input.val(),
       page: current_page,
     };
 
@@ -76,7 +78,24 @@ document.addEventListener("DOMContentLoaded", (event) => {
     );
   });
 
-  sort_input.on("click", function () {
+  sort_input.on("change", function () {
     localStorage.setItem("sort_input_val", sort_input.val());
+
+    request_parameters = {
+      search_query: search_input.val().trim(),
+      sort_order: $(this).val(),
+      page: current_page,
+    };
+
+    if (scheduled_function) {
+      clearTimeout(scheduled_function);
+    }
+
+    scheduled_function = setTimeout(
+      sendAjaxRequest,
+      delay_in_ms,
+      search_endpoint,
+      request_parameters
+    );
   });
 });

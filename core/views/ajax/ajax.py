@@ -16,17 +16,26 @@ class PostSearchAjaxView(View):
     def get(self, request, *args, **kwargs):
         search_query = request.GET.get('search_query')
         current_page = request.GET.get('page', 1)
+        sort_order = request.GET.get('sort_order', 'recent')
         does_req_accept_json = request.accepts('application/json')
         is_ajax_request = request.headers.get('x-requested-with') == 'XMLHttpRequest' and does_req_accept_json
 
         if is_ajax_request:
             posts_qs = ServiceOutcome(AjaxSearchService, {'search_query': search_query}).result
-            paginator = SmartPaginator(posts_qs, HOME_PAGE_SIZE, request=self.request)
 
-            print(current_page)
-            print(request.GET)
+            # TODO: Put that in separate service
+            match sort_order:
+                case 'recent':
+                    posts_qs = posts_qs.order_by('-created_at')
+                case 'liked':
+                    posts_qs = posts_qs.order_by('-number_of_likes')
+                case 'commented':
+                    posts_qs = posts_qs.order_by('-number_of_comments')
+                case _:
+                    posts_qs = posts_qs.order_by('-created_at')
+
+            paginator = SmartPaginator(posts_qs, HOME_PAGE_SIZE, request=self.request)
             page_obj = paginator.get_page(current_page)
-            
 
             serializer = AjaxSearchJsonSerializer(
                 page_obj,
