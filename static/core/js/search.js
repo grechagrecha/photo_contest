@@ -12,9 +12,12 @@ let sendAjaxRequest = function (endpoint, request_parameters) {
 };
 
 let parseAndFillTemplate = function (post, post_template) {
+  csrf_token = document.cookie.match("(^| )csrftoken=([^;]+)");
+  
   for (const fieldname in post) {
     regexp = "{{ " + fieldname + " }}";
     post_template = post_template.replaceAll(regexp, post[fieldname]);
+    post_template = post_template.replaceAll('{{ csrf_token }}', csrf_token[2])
   }
   return post_template;
 };

@@ -34,6 +34,12 @@ class PostSearchAjaxView(View):
                 case _:
                     posts_qs = posts_qs.order_by('-created_at')
 
+            user_likes = {}
+            if request.user.is_authenticated:
+                print(request.user.like_set)
+                user_likes = Like.objects.filter(user=request.user)
+            print(user_likes)
+
             paginator = SmartPaginator(posts_qs, HOME_PAGE_SIZE, request=self.request)
             page_obj = paginator.get_page(current_page)
 

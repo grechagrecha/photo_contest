@@ -34,7 +34,12 @@
           </div>
           <div class="col-auto ps-0">
             <div class="like-button">
-              <form action="{% url 'post-like' post.slug %}" method="POST">
+              <form action="{{ like_url }}" method="POST">
+                <input
+                  type="hidden"
+                  name="csrfmiddlewaretoken"
+                  value="{{ csrf_token }}"
+                />
                 <button
                   class="btn btn-sm btn-primary justify-content-end"
                   type="submit"

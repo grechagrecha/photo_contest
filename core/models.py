@@ -44,6 +44,9 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('post-detail', kwargs={'post_slug': self.slug})
+    
+    def get_like_url(self):
+        return reverse('post-like', kwargs={'slug': self.slug})
 
     def get_author_name(self):
         return self.author.username
