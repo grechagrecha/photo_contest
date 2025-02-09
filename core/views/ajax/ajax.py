@@ -14,25 +14,17 @@ from core.settings import HOME_PAGE_SIZE
 
 class PostSearchAjaxView(View):
     def get(self, request, *args, **kwargs):
-        search_query = request.GET.get('search_query')
-        current_page = request.GET.get('page', 1)
-        sort_order = request.GET.get('sort_order', 'recent')
         does_req_accept_json = request.accepts('application/json')
         is_ajax_request = request.headers.get('x-requested-with') == 'XMLHttpRequest' and does_req_accept_json
 
         if is_ajax_request:
-            posts_qs = ServiceOutcome(AjaxSearchService, {'search_query': search_query}).result
-
-            # TODO: Put that in separate service
-            match sort_order:
-                case 'recent':
-                    posts_qs = posts_qs.order_by('-created_at')
-                case 'liked':
-                    posts_qs = posts_qs.order_by('-number_of_likes')
-                case 'commented':
-                    posts_qs = posts_qs.order_by('-number_of_comments')
-                case _:
-                    posts_qs = posts_qs.order_by('-created_at')
+            posts_qs = ServiceOutcome(
+                AjaxSearchService,
+                {
+                    'search_query': request.GET.get('search_query'),
+                    'sort_order': request.GET.get('sort_order', 'recent')
+                }
+            ).result
 
             user_likes = {}
             if request.user.is_authenticated:
@@ -40,12 +32,18 @@ class PostSearchAjaxView(View):
                 user_likes = Like.objects.filter(user=request.user)
             print(user_likes)
 
-            paginator = SmartPaginator(posts_qs, HOME_PAGE_SIZE, request=self.request)
-            page_obj = paginator.get_page(current_page)
+            page = self.get_posts_on_current_page(posts_qs)
 
             serializer = AjaxSearchJsonSerializer(
-                page_obj,
+                page,
                 many=True
             )
             return JsonResponse(data={'data': serializer.data, 'status': 200})
         return Http404
+
+    def get_posts_on_current_page(self, queryset):
+        current_page = self.request.GET.get('page', 1)
+
+        paginator = SmartPaginator(queryset, HOME_PAGE_SIZE, request=self.request)
+        page_obj = paginator.get_page(current_page)
+        return page_obj
