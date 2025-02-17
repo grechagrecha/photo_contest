@@ -28,6 +28,7 @@ class PostUpdateView(UpdateView):
         return super().get(*args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        print(request.POST.dict())
         super().post(request, *args, **kwargs)
         post_slug = kwargs['post_slug']
         context = self.get_context_data()

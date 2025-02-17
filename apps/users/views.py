@@ -2,11 +2,12 @@ from allauth.account.signals import user_signed_up
 from allauth.socialaccount.models import SocialLogin
 from django.dispatch import receiver
 from django.http import HttpResponse
-from django.views.generic import ListView, DetailView, View
+from django.views.generic import DetailView, ListView, View
 
 from apps.users.models import User
-from core.models import Post, Like
+from core.models import Like, Post
 from core.paginator import SmartPaginator
+
 
 class LoginView(View):
     def get(self, request, *args, **kwargs):
@@ -60,9 +61,11 @@ class YourPostsView(ListView):
 
         return context
 
-
-@receiver(user_signed_up)
-def populate_profile_from_vk(sociallogin: SocialLogin, user, **kwargs):
-    extra_data: dict = sociallogin.account.extra_data
-    user.username = f'{extra_data.get('first_name')} {extra_data.get('last_name')}'
-    user.save()
+# BUG: Function triggers even when user signing up through default django auth
+# Possible solution: Nuke the default django auth and replace it with allauth
+#
+# @receiver(user_signed_up)
+# def populate_profile_from_vk(sociallogin: SocialLogin, user, **kwargs):
+#     extra_data: dict = sociallogin.account.extra_data
+#     user.username = f'{extra_data.get('first_name')} {extra_data.get('last_name')}'
+#     user.save()

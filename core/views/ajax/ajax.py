@@ -26,11 +26,11 @@ class PostSearchAjaxView(View):
                 }
             ).result
 
-            user_likes = {}
-            if request.user.is_authenticated:
-                print(request.user.like_set)
-                user_likes = Like.objects.filter(user=request.user)
-            print(user_likes)
+            # user_likes = {}
+            # if request.user.is_authenticated:
+            #     print(request.user.like_set)
+            #     user_likes = Like.objects.filter(user=request.user)
+            # print(user_likes)
 
             page = self.get_posts_on_current_page(posts_qs)
 
