@@ -1,6 +1,7 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.http import Http404
 from django.urls import reverse
+from django.contrib.auth import logout
 
 
 class RestrictAccessToAdminMiddleware:
@@ -22,3 +23,6 @@ class RestrictAccessToAdminMiddleware:
             if request.user.is_authenticated:
                 if not request.user.is_staff:
                     raise Http404
+        else:
+            if request.user.is_authenticated and request.user.is_staff:
+                logout(request=request)
