@@ -28,7 +28,7 @@ class Post(models.Model):
         format='JPEG',
         options={'quality': 60}
     )
-    image_previous = models.ImageField(upload_to='images/posts/prev/')
+    image_previous = models.ImageField(upload_to='images/posts/prev/', editable=False)
 
     created_at = models.DateTimeField(verbose_name='Date created', auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(verbose_name='Last updated at', auto_now=True, editable=False)

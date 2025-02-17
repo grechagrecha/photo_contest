@@ -1,23 +1,27 @@
 from django.contrib import admin, messages
 from django.contrib.admin import ModelAdmin
+from imagekit.admin import AdminThumbnail
 
-from .models import Post, Like, Comment
+from .models import Comment, Like, Post
 
 
 class PostAdmin(ModelAdmin):
     list_display = [
         'title',
-        'image',
+        'image_display',
         'author',
         'created_at',
         'updated_at',
-        'state'
+        'state',
     ]
     list_filter = [
         'author',
         'state',
     ]
     actions = ['publish', 'retract', 'recover']
+    
+    image_display = AdminThumbnail(image_field='image_thumbnail')
+    image_display.short_description = 'Image'
 
     @admin.action(description='Publish selected posts')
     def publish(self, request, queryset):
