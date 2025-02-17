@@ -132,8 +132,11 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
-LOGIN_REDIRECT_URL = '/'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
 LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
 SITE_ID = 1
 
 LANGUAGE_CODE = 'en-us'
