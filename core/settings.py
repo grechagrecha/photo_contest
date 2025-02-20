@@ -146,13 +146,16 @@ USE_I18N = True
 
 if not DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static/'),
-]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+STATIC_URL = 'static/'
 MEDIA_URL = 'media/'
+
+if DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static/'),
+    ]
+
 
 HOME_PAGE_SIZE = 6
 ALLOWED_IMAGE_TYPES = ('jpeg', 'png')
@@ -167,3 +170,5 @@ CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 
 POST_DELETION_COUNTDOWN = 1440  # in seconds
+
+MAX_FILE_UPLOAD_SIZE = 4*1024*1024

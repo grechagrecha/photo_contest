@@ -27,11 +27,13 @@
         <div class="col">
           <span class="small text-muted">{{ comment.created_at|timesince }} ago</span>
         </div>
+        {% if request.user.is_authenticated %}
         <div class="col-auto float-end px-3">
           {% if not comment.parent_comment.parent_comment %}
             <a class="text-decoration-none text-muted" href="{% url 'comment-reply' comment_slug=comment.slug %}"><i class="fa fa-reply"></i></a>
           {% endif %}
         </div>
+        {% endif %}
       </div>
     </div>
   </div>

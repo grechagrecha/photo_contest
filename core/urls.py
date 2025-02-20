@@ -18,10 +18,10 @@ urlpatterns = [
     path('post-delete/<slug:post_slug>', views.PostDeleteView.as_view(), name='post-delete'),
     path('post-update/<slug:post_slug>', views.PostUpdateView.as_view(), name='post-update'),
     path('post-recover/<slug:post_slug>', views.PostRecoverView.as_view(), name='post-recover'),
-    
+
     path('ajax-search/', views.PostSearchAjaxView.as_view(), name='ajax-search'),
 
-    path('post-like/<slug:slug>', views.LikeToggleView.as_view(), name='post-like'),
+    path('post-like/<slug:slug>', views.PostLikeAjaxView.as_view(), name='post-like'),
 
     path('comment-create/<slug:post_slug>', views.CommentCreateView.as_view(), name='comment-create'),
     path('comment-update/<slug:comment_slug>', views.CommentUpdateView.as_view(), name='comment-update'),

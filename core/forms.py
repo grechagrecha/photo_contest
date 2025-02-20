@@ -24,7 +24,7 @@ class PostCreateForm(forms.ModelForm):
     image = forms.ImageField(
         widget=forms.FileInput(
             attrs={
-                'class': 'btn'
+                'class': 'form-control'
             }
         )
     )

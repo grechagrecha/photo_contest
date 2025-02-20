@@ -13,11 +13,11 @@ let sendAjaxRequest = function (endpoint, request_parameters) {
 
 let parseAndFillTemplate = function (post, post_template) {
   csrf_token = document.cookie.match("(^| )csrftoken=([^;]+)");
-  
+
   for (const fieldname in post) {
     regexp = "{{ " + fieldname + " }}";
     post_template = post_template.replaceAll(regexp, post[fieldname]);
-    post_template = post_template.replaceAll('{{ csrf_token }}', csrf_token[2])
+    post_template = post_template.replaceAll("{{ csrf_token }}", csrf_token[2]);
   }
   return post_template;
 };
@@ -63,22 +63,24 @@ document.addEventListener("DOMContentLoaded", (event) => {
   search_input.on("keyup", function (key) {
     localStorage.setItem("search_input_val", search_input.val());
 
-    request_parameters = {
-      search_query: $(this).val().trim(),
-      sort_order: sort_input.val(),
-      page: current_page,
-    };
+    if ((search_input.val().length >= 3) | (search_input.val().length == 0)) {
+      request_parameters = {
+        search_query: $(this).val().trim(),
+        sort_order: sort_input.val(),
+        page: current_page,
+      };
 
-    if (scheduled_function) {
-      clearTimeout(scheduled_function);
+      if (scheduled_function) {
+        clearTimeout(scheduled_function);
+      }
+
+      scheduled_function = setTimeout(
+        sendAjaxRequest,
+        delay_in_ms,
+        search_endpoint,
+        request_parameters
+      );
     }
-
-    scheduled_function = setTimeout(
-      sendAjaxRequest,
-      delay_in_ms,
-      search_endpoint,
-      request_parameters
-    );
   });
 
   sort_input.on("change", function () {
