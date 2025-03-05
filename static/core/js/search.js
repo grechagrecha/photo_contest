@@ -1,9 +1,6 @@
 let sendAjaxRequest = function (endpoint, request_parameters) {
     return $.ajax({
-        url: endpoint,
-        type: "GET",
-        dataType: "json",
-        data: request_parameters,
+        url: endpoint, type: "GET", dataType: "json", data: request_parameters,
 
         success: function (response) {
             populatePage(response);
@@ -15,8 +12,7 @@ let sendAjaxRequest = function (endpoint, request_parameters) {
 
                 sendLikeAjaxRequest(endpoint, request_parameters);
             });
-        },
-        error: function (response) {
+        }, error: function (response) {
             console.log(response);
         },
     });
@@ -25,27 +21,19 @@ let sendAjaxRequest = function (endpoint, request_parameters) {
 let sendLikeAjaxRequest = function (endpoint, request_parameters) {
     let csrf_token = window.CSRF_TOKEN;
     return $.ajax({
-        url: endpoint,
-        type: "POST",
-        dataType: "json",
-        data: request_parameters,
-        statusCode: {
+        url: endpoint, type: "POST", dataType: "json", data: request_parameters, statusCode: {
             200: function (response) {
                 refreshLikeButtons(response);
-            },
-            401: function (response) {
+            }, 401: function (response) {
                 message = response.responseJSON.message;
                 console.log(response);
                 alert(message);
             },
-        },
-        beforeSend: function (xhr) {
+        }, beforeSend: function (xhr) {
             xhr.setRequestHeader("X-CSRFToken", csrf_token);
-        },
-        success: function (response) {
+        }, success: function (response) {
             console.log(response);
-        },
-        error: function (response) {
+        }, error: function (response) {
             console.log(response);
         },
     });
@@ -61,16 +49,21 @@ let getCurrentPostsIds = function () {
     return post_ids.join(", ");
 };
 
-let refreshLikeButtons = function (response) {
-    $.getJSON(
-        $("#post-section").attr("data-get-likes-url"),
-        {
-            post_ids: getCurrentPostsIds(),
-        },
-        (response) => {
-            console.log(response)
-        }
-    );
+let refreshLikeButtons = function () {
+    $.getJSON($("#post-section").attr("data-get-likes-url"), {
+        post_ids: getCurrentPostsIds(),
+    }, (response) => {
+        let like_buttons = $("button[name*='like-button']")
+        like_buttons.each((btn_idx, btn) => {
+            if (response.includes(btn.id)) {
+                $(btn).toggleClass('btn-primary', false)
+                $(btn).toggleClass('btn-danger', true)
+            } else {
+                $(btn).toggleClass('btn-primary', true)
+                $(btn).toggleClass('btn-danger', false)
+            }
+        })
+    });
 };
 
 let parseAndFillTemplate = function (post, post_template) {
@@ -89,8 +82,7 @@ let populatePage = function (response) {
 
     let posts = response.data;
     let post_template = $.get({
-        url: post_section.attr("data-url"),
-        async: false,
+        url: post_section.attr("data-url"), async: false,
     }).responseText;
 
     post_section.empty();
@@ -101,6 +93,7 @@ let populatePage = function (response) {
             .hide()
             .fadeIn(350);
     });
+    refreshLikeButtons()
 };
 
 document.addEventListener("DOMContentLoaded", (event) => {
@@ -117,9 +110,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     sort_input.val(localStorage.getItem("sort_input_val"));
 
     sendAjaxRequest(search_endpoint, {
-        search_query: search_input.val(),
-        sort_order: sort_input.val(),
-        page: current_page,
+        search_query: search_input.val(), sort_order: sort_input.val(), page: current_page, async: false
     });
 
     search_input.on("keyup", function (key) {
@@ -127,21 +118,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
         if ((search_input.val().length >= 3) || (search_input.val().length === 0)) {
             let request_parameters = {
-                search_query: $(this).val().trim(),
-                sort_order: sort_input.val(),
-                page: current_page,
+                search_query: $(this).val().trim(), sort_order: sort_input.val(), page: current_page,
             };
 
             if (scheduled_function) {
                 clearTimeout(scheduled_function);
             }
 
-            scheduled_function = setTimeout(
-                sendAjaxRequest,
-                delay_in_ms,
-                search_endpoint,
-                request_parameters
-            );
+            scheduled_function = setTimeout(sendAjaxRequest, delay_in_ms, search_endpoint, request_parameters);
         }
     });
 
@@ -149,20 +133,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
         localStorage.setItem("sort_input_val", sort_input.val());
 
         let request_parameters = {
-            search_query: search_input.val().trim(),
-            sort_order: $(this).val(),
-            page: current_page,
+            search_query: search_input.val().trim(), sort_order: $(this).val(), page: current_page,
         };
 
         if (scheduled_function) {
             clearTimeout(scheduled_function);
         }
 
-        scheduled_function = setTimeout(
-            sendAjaxRequest,
-            delay_in_ms,
-            search_endpoint,
-            request_parameters
-        );
+        scheduled_function = setTimeout(sendAjaxRequest, delay_in_ms, search_endpoint, request_parameters);
     });
 });

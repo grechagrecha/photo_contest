@@ -12,7 +12,7 @@ class LikeGetView(View):
         user_likes = ServiceOutcome(LikeGetFromUserService, {'user': request.user}).result
         print(f'User likes qs: {user_likes}')
 
-        for like in user_likes:
+        for like in user_likes.select_related('post'):
             if like.post.slug in post_slugs:
                 data.append(like.post.slug)
 

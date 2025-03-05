@@ -15,5 +15,5 @@ class LikeGetFromUserService(ServiceWithResult):
     def process(self):
         self.run_custom_validations()
         if self.is_valid():
-            self.result = self.cleaned_data['user'].like_set.select_related('post').all()
+            self.result = self.cleaned_data['user'].like_set.all()
         return self
