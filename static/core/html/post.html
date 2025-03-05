@@ -33,21 +33,17 @@
             </div>
           </div>
           <div class="col-auto ps-0">
-            <div class="like-button">
-              <form action="{{ like_url }}" method="POST">
-                <input
-                  type="hidden"
-                  name="csrfmiddlewaretoken"
-                  value="{{ csrf_token }}"
-                />
+            <div class="like-button-div">
                 <button
                   class="btn btn-sm btn-primary justify-content-end"
-                  type="submit"
+                  type="button"
+                  data-like-url="{{ like_url }}"
+                  id="{{ slug }}"
+                  name="like-button"
                 >
                   <span>{{ number_of_likes }}</span>
                   <i class="fa fa-thumbs-up" title="Like"></i>
                 </button>
-              </form>
             </div>
           </div>
         </div>

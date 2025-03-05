@@ -38,7 +38,7 @@ class PostSearchAjaxView(View):
                 page,
                 many=True
             )
-            return JsonResponse(data={'data': serializer.data, 'status': 200})
+            return JsonResponse(data={'data': serializer.data, 'status': 200}, status=200)
         return Http404
 
     def get_posts_on_current_page(self, queryset):

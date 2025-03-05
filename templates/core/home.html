@@ -2,6 +2,9 @@
 {% load static %}
 
 {% block custom_scripts %}
+<script type="text/javascript">
+  window.CSRF_TOKEN = "{{ csrf_token }}"; 
+</script>
 <script src="{% static 'core/js/search.js' %}"></script>
 {% endblock %}
 
@@ -45,7 +48,7 @@ Home
         </div>
       </div>
       <!-- Post section -->
-      <div class="row" id="post-section" data-url="{% static 'core/html/post.html' %}"></div>
+      <div class="row" id="post-section" data-url="{% static 'core/html/post.html' %}" data-get-likes-url={% url 'get-likes' %}></div>
       <!-- End of post section -->
       {% if is_paginated %}
       <div class="row">

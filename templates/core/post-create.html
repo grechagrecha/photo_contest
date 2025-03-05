@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}Add post{% endblock %}
+
+{% block custom_scripts %}
+<script src="{% static "core/js/image_size_limiter.js" %}"></script>
+{% endblock custom_scripts %}
 
 {% block content %}
 

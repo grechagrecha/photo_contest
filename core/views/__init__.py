@@ -1,5 +1,5 @@
 from .home import HomeView
-from .like import LikeToggleView
+from .like import LikeToggleView, LikeGetView
 from .post import (
     PostCreateView,
     PostUpdateView,

@@ -21,6 +21,7 @@ urlpatterns = [
 
     path('ajax-search/', views.PostSearchAjaxView.as_view(), name='ajax-search'),
 
+    path('get-likes/', views.LikeGetView.as_view(), name='get-likes'),
     path('post-like/<slug:slug>', views.PostLikeAjaxView.as_view(), name='post-like'),
 
     path('comment-create/<slug:post_slug>', views.CommentCreateView.as_view(), name='comment-create'),

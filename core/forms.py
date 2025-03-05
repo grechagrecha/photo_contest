@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 
 from .models import Post, Comment
 
@@ -24,7 +25,9 @@ class PostCreateForm(forms.ModelForm):
     image = forms.ImageField(
         widget=forms.FileInput(
             attrs={
-                'class': 'form-control'
+                'class': 'form-control',
+                'id': 'upload-input',
+                'accept': settings.ALLOWED_IMAGE_TYPES
             }
         )
     )
