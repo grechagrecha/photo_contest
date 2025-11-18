@@ -6,7 +6,7 @@ from apps.users.models import User
 
 class LikeGetFromUserService(ServiceWithResult):
     """
-        Service that gets a user and returns bool if user liked that post.
+        Service that gets a user and returns user's liked posts.
     """
     user = ModelField(User)
 
