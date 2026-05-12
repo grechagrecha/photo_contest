@@ -9,7 +9,7 @@ load_dotenv()
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG') in ['True']
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(', ')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(', ')
 
 DJANGO_APPS = [
     'django.contrib.admin',
