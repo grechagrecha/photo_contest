@@ -21,6 +21,7 @@ requests = "*"
 ipython = "*"
 gunicorn = "*"
 django-stubs = "*"
+djangorestframework-stubs = "*"
 
 [dev-packages]
 django-debug-toolbar = "*"
