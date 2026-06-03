@@ -11,6 +11,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('users/', include('apps.users.urls')),
+    path('api/', include('apps.api.urls')),
     path('', views.HomeView.as_view(), name='home'),
 
     path('post/<slug:post_slug>', views.PostDetailView.as_view(), name='post-detail'),
