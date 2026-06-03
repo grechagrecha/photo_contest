@@ -1,1 +1,1 @@
-# Create your views here.
+from .token import CustomAuthToken

@@ -3,7 +3,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
-# TODO: Move core/signals to apps/users/signals
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
@@ -11,4 +11,3 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         print(f'post_save signal working, token {t} for user {instance} was created')
     else:
         print(f'post_save signal working, user already has a token')
-        

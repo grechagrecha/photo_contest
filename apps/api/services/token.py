@@ -4,7 +4,7 @@ from rest_framework.authtoken.models import Token
 
 from apps.users.models import User
 
-
+# TODO: Rewrite this to have it returning token by user_pk.
 class TokenGetOrCreateService(ServiceWithResult):
     """
         Returns or creates a Token when given User.
